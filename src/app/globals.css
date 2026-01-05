@@ -1,0 +1,936 @@
+/* Satoshi - Premium geometric sans for headings (Fontshare) */
+@import url('https://api.fontshare.com/v2/css?f[]=satoshi@400,500,600,700,900&display=swap');
+
+@import "tailwindcss";
+
+:root {
+  /* ═══════════════════════════════════════════════════════════════════════════
+   * BRAND COLOR PALETTE — Creet Identity System
+   * ═══════════════════════════════════════════════════════════════════════════ */
+
+  /* ─────────────────────────────────────────────────────────────────────────
+   * SURFACE SCALE (Backgrounds)
+   * ───────────────────────────────────────────────────────────────────────── */
+  --background: #09090B;
+  /* The Void — Page background */
+  --surface-1: #0F0F11;
+  /* Panels, sidebars */
+  --surface-2: #18181B;
+  /* Cards, elevated surfaces */
+  --surface-3: #27272A;
+  /* Highest elevation, overlays */
+  --surface-4: #1C1C1F;
+  /* Modal backgrounds */
+
+  /* Legacy alias */
+  --surface: #27272A;
+
+  /* ─────────────────────────────────────────────────────────────────────────
+   * TEXT SCALE
+   * ───────────────────────────────────────────────────────────────────────── */
+  --foreground: #E4E4E7;
+  /* Body text (Zinc-200) */
+  --text-primary: #FAFAFA;
+  /* Headlines, important text */
+  --text-secondary: #E4E4E7;
+  /* Body text */
+  --text-muted: #A1A1AA;
+  /* Captions, labels (Zinc-400) */
+  --text-subtle: #71717A;
+  /* Hints, placeholders (Zinc-500) */
+  --text-disabled: #52525B;
+  /* Disabled states (Zinc-600) */
+
+  /* ─────────────────────────────────────────────────────────────────────────
+   * BRAND COLORS
+   * ───────────────────────────────────────────────────────────────────────── */
+  --color-accent: #BFFF00;
+  /* Electric Lime — THE SIGNAL */
+  --color-accent-hover: #D4FF50;
+  /* Lime hover state */
+  --color-accent-muted: rgba(191, 255, 0, 0.1);
+  /* Lime backgrounds */
+  --color-accent-border: rgba(191, 255, 0, 0.2);
+  /* Lime borders */
+
+  /* Utility — THE FOCUS */
+  --color-canvas: #FFFFFF;
+  /* Pure white for toggles, checkboxes, secondary buttons */
+
+  /* ─────────────────────────────────────────────────────────────────────────
+   * BORDERS
+   * ───────────────────────────────────────────────────────────────────────── */
+  --border: #27272A;
+  /* Legacy */
+  --border-default: rgba(255, 255, 255, 0.04);
+  /* Subtle */
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  /* Cards */
+  --border-medium: rgba(255, 255, 255, 0.08);
+  /* Hover */
+  --border-strong: rgba(255, 255, 255, 0.10);
+  /* Focus */
+  --border-white: rgba(255, 255, 255, 0.20);
+  /* High contrast */
+
+  /* ─────────────────────────────────────────────────────────────────────────
+   * SEMANTIC COLORS
+   * ───────────────────────────────────────────────────────────────────────── */
+  --color-success: #BFFF00;
+  /* Matches brand */
+  --color-info: #FFFFFF;
+  /* White (neutral info) */
+  --color-warning: #F59E0B;
+  /* Amber-500 */
+  --color-danger: #EF4444;
+  /* Red-500 */
+
+  /* ─────────────────────────────────────────────────────────────────────────
+   * ELEVATION SHADOWS
+   * Each includes: drop shadows + inner highlight for physical presence
+   * ───────────────────────────────────────────────────────────────────────── */
+  --shadow-level-0: none;
+  --shadow-level-1: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 0 0 rgba(255, 255, 255, 0.04);
+  --shadow-level-2: 0 4px 8px rgba(0, 0, 0, 0.4), 0 12px 32px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.06), inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
+  --shadow-level-3: 0 8px 16px rgba(0, 0, 0, 0.5), 0 24px 48px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.08), inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+
+  /* Special shadows */
+  --shadow-glow-lime: 0 0 20px rgba(191, 255, 0, 0.15);
+  --shadow-glow-lime-subtle: 0 0 12px rgba(191, 255, 0, 0.1);
+  --shadow-inset-input: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  /* ─────────────────────────────────────────────────────────────────────────
+   * TYPOGRAPHY
+   * Satoshi for headings (design-forward), Inter for UI, JetBrains for code
+   * ───────────────────────────────────────────────────────────────────────── */
+  --font-heading: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+@theme inline {
+  /* Colors */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-border: var(--border);
+  --color-accent: var(--color-accent);
+  --color-accent-hover: var(--color-accent-hover);
+  --color-canvas: var(--color-canvas);
+  --color-info: var(--color-info);
+  --color-warning: var(--color-warning);
+  --color-danger: var(--color-danger);
+  --color-success: var(--color-success);
+
+  /* Surface Scale */
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-surface-4: var(--surface-4);
+
+  /* Text Scale */
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-text-subtle: var(--text-subtle);
+  --color-text-disabled: var(--text-disabled);
+
+  /* Fonts */
+  --font-sans: var(--font-sans);
+  --font-heading: var(--font-heading);
+  --font-mono: var(--font-mono);
+
+  /* Shadows - exposed as CSS variables for use with style={{ boxShadow: 'var(--shadow-level-1)' }} */
+  --shadow-level-0: var(--shadow-level-0);
+  --shadow-level-1: var(--shadow-level-1);
+  --shadow-level-2: var(--shadow-level-2);
+  --shadow-level-3: var(--shadow-level-3);
+  --shadow-glow-lime: var(--shadow-glow-lime);
+}
+
+/* Dark theme is the primary identity */
+.dark {
+  --background: #09090B;
+  /* Studio Black */
+  --foreground: #E4E4E7;
+  /* Mist White */
+  --surface: #27272A;
+  /* Glass Gray */
+  --border: #27272A;
+}
+
+/* Light theme (if ever needed — use sparingly) */
+.light {
+  --background: #FAFAFA;
+  --foreground: #09090B;
+  --surface: #F4F4F5;
+  --border: #E4E4E7;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  font-smooth: antialiased;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+ * TYPOGRAPHY — Satoshi for Headings, Inter for Body
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+/* All headings use Satoshi with tight tracking */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.heading {
+  font-family: var(--font-heading), ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: -0.025em;
+  /* tracking-tight */
+}
+
+/* Extra tight tracking for large headlines */
+h1,
+.heading-xl {
+  letter-spacing: -0.05em;
+  /* tracking-tighter */
+}
+
+/* Subtle global backdrop glow */
+body::before {
+  content: "";
+  position: fixed;
+  inset: -40% -20% auto -20%;
+  height: 70vh;
+  background: radial-gradient(60% 60% at 50% 0%, color-mix(in oklab, var(--color-accent) 25%, transparent) 0%, transparent 60%),
+    radial-gradient(40% 40% at 20% 10%, color-mix(in oklab, var(--color-accent) 12%, transparent) 0%, transparent 70%);
+  filter: blur(80px);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Card utility */
+.ui-card {
+  background: color-mix(in oklab, var(--background) 92%, transparent);
+  border: 1px solid color-mix(in oklab, var(--foreground) 10%, transparent);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04), 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+/* Hide scrollbar utility - keeps scroll functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+  /* Chrome, Safari, Opera */
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+ * CONTAINER QUERIES — For Form Card Responsive Sizing
+ * ═══════════════════════════════════════════════════════════════════════════
+ * 
+ * Problem: Form cards are displayed in two contexts:
+ * 1. Form Builder: Card container is ~800-1000px even though viewport is 1400px+
+ * 2. Preview/Public: Card container = full viewport
+ *
+ * Solution: Use container queries so elements respond to the card's width,
+ * not the viewport width.
+ *
+ * Container Breakpoints (matching Tailwind viewports):
+ * - @sm: 640px container width
+ * - @md: 768px container width  
+ * - @lg: 1024px container width
+ * - @xl: 1280px container width
+ */
+
+/* Container marker for form cards */
+.form-card-container {
+  container-type: inline-size;
+  container-name: form-card;
+}
+
+/* 
+ * Container Query Utility Classes
+ * Usage: Replace lg:text-3xl with cq-lg:text-3xl for container-based scaling
+ */
+
+/* Typography - Title scaling */
+@container form-card (min-width: 1024px) {
+  .cq-lg\:text-5xl {
+    font-size: 3rem;
+    line-height: 1;
+  }
+
+  .cq-lg\:text-3xl {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+  }
+
+  .cq-lg\:text-2xl {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+
+  .cq-lg\:text-xl {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+  }
+
+  .cq-lg\:text-lg {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+  }
+
+  .cq-lg\:text-base {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+
+  .cq-lg\:text-sm {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+
+  .cq-lg\:text-xs {
+    font-size: 0.75rem;
+    line-height: 1rem;
+  }
+}
+
+/* Spacing/Sizing */
+@container form-card (min-width: 1024px) {
+  .cq-lg\:h-12 {
+    height: 3rem;
+  }
+
+  .cq-lg\:h-14 {
+    height: 3.5rem;
+  }
+
+  .cq-lg\:h-48 {
+    height: 12rem;
+  }
+
+  .cq-lg\:w-5 {
+    width: 1.25rem;
+  }
+
+  .cq-lg\:h-5 {
+    height: 1.25rem;
+  }
+
+  .cq-lg\:w-6 {
+    width: 1.5rem;
+  }
+
+  .cq-lg\:h-6 {
+    height: 1.5rem;
+  }
+
+  .cq-lg\:w-7 {
+    width: 1.75rem;
+  }
+
+  .cq-lg\:h-7 {
+    height: 1.75rem;
+  }
+
+  .cq-lg\:w-12 {
+    width: 3rem;
+  }
+
+  .cq-lg\:h-12 {
+    height: 3rem;
+  }
+
+  .cq-lg\:w-14 {
+    width: 3.5rem;
+  }
+
+  .cq-lg\:h-14 {
+    height: 3.5rem;
+  }
+}
+
+/* Padding */
+@container form-card (min-width: 1024px) {
+  .cq-lg\:p-5 {
+    padding: 1.25rem;
+  }
+
+  .cq-lg\:p-6 {
+    padding: 1.5rem;
+  }
+
+  .cq-lg\:px-12 {
+    padding-left: 3rem;
+    padding-right: 3rem;
+  }
+
+  .cq-lg\:py-8 {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  .cq-lg\:py-10 {
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
+  }
+
+  .cq-lg\:py-12 {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+
+  .cq-lg\:pb-10 {
+    padding-bottom: 2.5rem;
+  }
+
+  .cq-lg\:pb-12 {
+    padding-bottom: 3rem;
+  }
+
+  .cq-lg\:pt-10 {
+    padding-top: 2.5rem;
+  }
+}
+
+/* Gaps */
+@container form-card (min-width: 1024px) {
+  .cq-lg\:gap-3 {
+    gap: 0.75rem;
+  }
+
+  .cq-lg\:gap-4 {
+    gap: 1rem;
+  }
+}
+
+/* Space utilities */
+@container form-card (min-width: 1024px) {
+  .cq-lg\:space-y-3> :not([hidden])~ :not([hidden]) {
+    margin-top: 0.75rem;
+  }
+
+  .cq-lg\:space-y-4> :not([hidden])~ :not([hidden]) {
+    margin-top: 1rem;
+  }
+
+  .cq-lg\:space-y-8> :not([hidden])~ :not([hidden]) {
+    margin-top: 2rem;
+  }
+}
+
+/* Margins */
+@container form-card (min-width: 1024px) {
+  .cq-lg\:mb-8 {
+    margin-bottom: 2rem;
+  }
+
+  .cq-lg\:mt-1 {
+    margin-top: 0.25rem;
+  }
+
+  .cq-lg\:mt-6 {
+    margin-top: 1.5rem;
+  }
+
+  .cq-lg\:mt-8 {
+    margin-top: 2rem;
+  }
+}
+
+/* Max-width */
+@container form-card (min-width: 1024px) {
+  .cq-lg\:max-w-lg {
+    max-width: 32rem;
+  }
+
+  .cq-lg\:max-w-xl {
+    max-width: 36rem;
+  }
+
+  .cq-lg\:max-w-2xl {
+    max-width: 42rem;
+  }
+
+  .cq-lg\:max-w-md {
+    max-width: 28rem;
+  }
+}
+
+/* Width percentage (for split layouts) */
+@container form-card (min-width: 1024px) {
+  .cq-lg\:w-20 {
+    width: 5rem;
+  }
+}
+
+/* XL Container Queries (1280px+) */
+@container form-card (min-width: 1280px) {
+  .cq-xl\:text-4xl {
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+  }
+
+  .cq-xl\:text-3xl {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+  }
+
+  .cq-xl\:text-2xl {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+
+  .cq-xl\:text-xl {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+  }
+
+  .cq-xl\:text-lg {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+  }
+
+  .cq-xl\:h-14 {
+    height: 3.5rem;
+  }
+
+  .cq-xl\:h-16 {
+    height: 4rem;
+  }
+
+  .cq-xl\:w-8 {
+    width: 2rem;
+  }
+
+  .cq-xl\:h-8 {
+    height: 2rem;
+  }
+
+  .cq-xl\:w-16 {
+    width: 4rem;
+  }
+
+  .cq-xl\:h-16 {
+    height: 4rem;
+  }
+
+  .cq-xl\:px-16 {
+    padding-left: 4rem;
+    padding-right: 4rem;
+  }
+
+  .cq-xl\:py-12 {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+
+  .cq-xl\:gap-4 {
+    gap: 1rem;
+  }
+
+  .cq-xl\:space-y-5> :not([hidden])~ :not([hidden]) {
+    margin-top: 1.25rem;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+ * Additional Container Query Utilities for Card Components 
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+/* LG Breakpoint - Additional utilities */
+@container form-card (min-width: 1024px) {
+
+  /* Layout utilities */
+  .cq-lg\:flex-row {
+    flex-direction: row;
+  }
+
+  .cq-lg\:w-1\/2 {
+    width: 50%;
+  }
+
+  .cq-lg\:w-2\/5 {
+    width: 40%;
+  }
+
+  .cq-lg\:w-3\/5 {
+    width: 60%;
+  }
+
+  .cq-lg\:min-h-0 {
+    min-height: 0;
+  }
+
+  .cq-lg\:hidden {
+    display: none;
+  }
+
+  .cq-lg\:overflow-hidden {
+    overflow: hidden;
+  }
+
+  .cq-lg\:overflow-y-auto {
+    overflow-y: auto;
+  }
+
+  /* Additional sizing */
+  .cq-lg\:w-10 {
+    width: 2.5rem;
+  }
+
+  .cq-lg\:h-10 {
+    height: 2.5rem;
+  }
+
+  .cq-lg\:w-16 {
+    width: 4rem;
+  }
+
+  .cq-lg\:h-16 {
+    height: 4rem;
+  }
+
+  .cq-lg\:w-20 {
+    width: 5rem;
+  }
+
+  /* Additional padding */
+  .cq-lg\:p-2\.5 {
+    padding: 0.625rem;
+  }
+
+  .cq-lg\:p-4 {
+    padding: 1rem;
+  }
+
+  /* Additional margins */
+  .cq-lg\:mb-3 {
+    margin-bottom: 0.75rem;
+  }
+
+  .cq-lg\:mb-4 {
+    margin-bottom: 1rem;
+  }
+
+  .cq-lg\:mb-5 {
+    margin-bottom: 1.25rem;
+  }
+
+  .cq-lg\:mb-6 {
+    margin-bottom: 1.5rem;
+  }
+
+  .cq-lg\:mb-10 {
+    margin-bottom: 2.5rem;
+  }
+
+  .cq-lg\:mt-3 {
+    margin-top: 0.75rem;
+  }
+
+  .cq-lg\:mt-4 {
+    margin-top: 1rem;
+  }
+
+  .cq-lg\:mt-10 {
+    margin-top: 2.5rem;
+  }
+
+  .cq-lg\:my-6 {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .cq-lg\:pt-4 {
+    padding-top: 1rem;
+  }
+
+  .cq-lg\:pt-8 {
+    padding-top: 2rem;
+  }
+
+  .cq-lg\:pt-2 {
+    padding-top: 0.5rem;
+  }
+
+  .cq-lg\:pb-10 {
+    padding-bottom: 2.5rem;
+  }
+
+  .cq-lg\:mt-5 {
+    margin-top: 1.25rem;
+  }
+
+  .cq-lg\:mb-2 {
+    margin-bottom: 0.5rem;
+  }
+
+  .cq-lg\:px-3 {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  .cq-lg\:h-9 {
+    height: 2.25rem;
+  }
+
+  /* Gap utilities */
+  .cq-lg\:gap-1\.5 {
+    gap: 0.375rem;
+  }
+
+  /* Gap utilities */
+  .cq-lg\:gap-5 {
+    gap: 1.25rem;
+  }
+
+  .cq-lg\:gap-6 {
+    gap: 1.5rem;
+  }
+
+  .cq-lg\:gap-8 {
+    gap: 2rem;
+  }
+
+  /* Border radius */
+  .cq-lg\:rounded-2xl {
+    border-radius: 1rem;
+  }
+
+  .cq-lg\:rounded-3xl {
+    border-radius: 1.5rem;
+  }
+
+  /* Min-width */
+  .cq-lg\:min-w-\[180px\] {
+    min-width: 180px;
+  }
+
+  /* Positions */
+  .cq-lg\:top-4 {
+    top: 1rem;
+  }
+
+  .cq-lg\:right-4 {
+    right: 1rem;
+  }
+
+  .cq-lg\:left-4 {
+    left: 1rem;
+  }
+
+  /* Spacing utilities */
+  .cq-lg\:space-y-6> :not([hidden])~ :not([hidden]) {
+    margin-top: 1.5rem;
+  }
+}
+
+/* XL Breakpoint - Additional utilities */
+@container form-card (min-width: 1280px) {
+
+  /* Layout utilities */
+  .cq-xl\:max-w-3xl {
+    max-width: 48rem;
+  }
+
+  .cq-xl\:max-w-xl {
+    max-width: 36rem;
+  }
+
+  .cq-xl\:max-w-lg {
+    max-width: 32rem;
+  }
+
+  .cq-xl\:max-w-md {
+    max-width: 28rem;
+  }
+
+  .cq-xl\:max-w-sm {
+    max-width: 24rem;
+  }
+
+  /* Additional sizing */
+  .cq-xl\:w-5 {
+    width: 1.25rem;
+  }
+
+  .cq-xl\:h-5 {
+    height: 1.25rem;
+  }
+
+  .cq-xl\:w-6 {
+    width: 1.5rem;
+  }
+
+  .cq-xl\:h-6 {
+    height: 1.5rem;
+  }
+
+  .cq-xl\:w-7 {
+    width: 1.75rem;
+  }
+
+  .cq-xl\:h-7 {
+    height: 1.75rem;
+  }
+
+  .cq-xl\:w-9 {
+    width: 2.25rem;
+  }
+
+  .cq-xl\:h-9 {
+    height: 2.25rem;
+  }
+
+  .cq-xl\:w-12 {
+    width: 3rem;
+  }
+
+  .cq-xl\:h-12 {
+    height: 3rem;
+  }
+
+  .cq-xl\:w-20 {
+    width: 5rem;
+  }
+
+  .cq-xl\:h-20 {
+    height: 5rem;
+  }
+
+  /* Heights */
+  .cq-xl\:h-64 {
+    height: 16rem;
+  }
+
+  /* Padding */
+  .cq-xl\:p-3 {
+    padding: 0.75rem;
+  }
+
+  .cq-xl\:p-6 {
+    padding: 1.5rem;
+  }
+
+  .cq-xl\:p-8 {
+    padding: 2rem;
+  }
+
+  .cq-xl\:px-3 {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  .cq-xl\:py-1\.5 {
+    padding-top: 0.375rem;
+    padding-bottom: 0.375rem;
+  }
+
+  .cq-xl\:py-6 {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+  }
+
+  /* Margins */
+  .cq-xl\:mt-4 {
+    margin-top: 1rem;
+  }
+
+  .cq-xl\:mb-8 {
+    margin-bottom: 2rem;
+  }
+
+  /* Gap utilities */
+  .cq-xl\:gap-5 {
+    gap: 1.25rem;
+  }
+
+  .cq-xl\:gap-6 {
+    gap: 1.5rem;
+  }
+
+  .cq-xl\:gap-8 {
+    gap: 2rem;
+  }
+
+  /* Border radius */
+  .cq-xl\:rounded-3xl {
+    border-radius: 1.5rem;
+  }
+
+  /* Text sizes */
+  .cq-xl\:text-base {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+
+  .cq-xl\:text-sm {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+
+  .cq-xl\:text-xs {
+    font-size: 0.75rem;
+    line-height: 1rem;
+  }
+
+  .cq-xl\:text-5xl {
+    font-size: 3rem;
+    line-height: 1;
+  }
+
+  .cq-xl\:text-6xl {
+    font-size: 3.75rem;
+    line-height: 1;
+  }
+
+  /* Positions */
+  .cq-xl\:top-5 {
+    top: 1.25rem;
+  }
+
+  .cq-xl\:right-5 {
+    right: 1.25rem;
+  }
+
+  .cq-xl\:left-5 {
+    left: 1.25rem;
+  }
+
+  /* Spacing utilities */
+  .cq-xl\:space-y-8> :not([hidden])~ :not([hidden]) {
+    margin-top: 2rem;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+ * CUSTOM SCROLLBAR
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Thin dark scrollbar for panels */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 9999px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+}

@@ -1,0 +1,351 @@
+Creet.io Community License
+Version 1.0 - January 2026
+
+Copyright (c) 2026 Creet.io. All Rights Reserved.
+
+================================================================================
+                          TL;DR - PLAIN ENGLISH SUMMARY
+================================================================================
+
+🎉 YOU CAN FREELY:
+   • Use this software for your personal projects
+   • Deploy it on your own website to collect and display testimonials
+   • Modify it however you want for your own use
+   • Use it for your company's internal purposes
+   • Host it yourself instead of using our paid service
+   • Learn from the code and use it for educational purposes
+
+🚫 YOU CANNOT:
+   • Build a competing testimonial/social proof SaaS and sell it
+   • Take our code/features and use them in a competing product
+   • White-label this and resell it as your own product
+
+In short: Use it freely for YOUR websites and projects. Just don't turn it into
+a competing product that you sell to others.
+
+================================================================================
+                              TERMS AND CONDITIONS
+================================================================================
+
+This license ("License") applies to the software ("Software") made available by
+Creet.io ("Licensor"). By using, copying, modifying, or distributing the
+Software, you agree to the terms of this License.
+
+--------------------------------------------------------------------------------
+                        1. GRANT OF LICENSE - PERMITTED USES
+--------------------------------------------------------------------------------
+
+The Licensor hereby grants you a FREE, non-exclusive, worldwide, royalty-free
+license to use this Software. We WANT you to use this software! The permissions
+below are intentionally broad to encourage adoption.
+
+You are FREE to:
+
+  a) USE FOR YOUR OWN WEBSITES: Deploy the Software on your website(s) to
+     collect, manage, and display testimonials. This is exactly what the
+     Software is designed for, and you are fully permitted to do this
+     regardless of whether you are an individual, startup, or enterprise.
+
+  b) USE FOR PERSONAL PROJECTS: Use the Software for any personal,
+     non-commercial project without any restrictions.
+
+  c) USE FOR YOUR BUSINESS: Use the Software for your company's internal
+     purposes, including:
+     - Collecting testimonials from your customers
+     - Displaying testimonials on your company website(s)
+     - Integrating with your existing tools and workflows
+     - Customizing the look and feel to match your brand
+
+  d) SELF-HOST: Deploy and operate the Software on your own servers,
+     cloud infrastructure, or any hosting provider of your choice.
+     You own your data and your deployment.
+
+  e) MODIFY FREELY: Change, customize, extend, or adapt the Software
+     in any way you need for your own use. Add features, remove features,
+     change the design - it's yours to customize.
+
+  f) EDUCATIONAL USE: Study the code, learn from it, use it in courses,
+     tutorials, or educational materials.
+
+  g) CONTRIBUTE BACK: Submit improvements, bug fixes, or new features
+     back to the main project (optional, but appreciated!).
+
+--------------------------------------------------------------------------------
+                    2. RESTRICTIONS - FOR COMPETITORS ONLY
+--------------------------------------------------------------------------------
+
+The following restrictions apply ONLY to those who wish to use this Software
+to build competing products or services. If you are using the Software for
+your own website, business, or personal projects, these restrictions DO NOT
+apply to you.
+
+Notwithstanding any other provision of this License, you may NOT:
+
+  a) COMPETING SAAS PROHIBITION: Use the Software, or any derivative work
+     thereof, to provide a product or service that competes with the Software.
+     A "Competing Use" includes, but is not limited to:
+
+     - Offering the Software, or a substantially similar product derived from
+       the Software, as a hosted or managed service to third parties
+     - Providing testimonial collection, management, display, or related
+       services as a primary offering that is substantially based on the
+       Software
+     - Selling, licensing, or otherwise commercially distributing the Software
+       or any derivative work as a standalone product or as a core component
+       of a product that replicates the primary functionality of the Software
+     - Operating a "white-label" or "reseller" service based on the Software
+
+  b) PARTIAL USE AND FEATURE EXTRACTION PROHIBITION: Extract, copy, adapt,
+     port, or incorporate ANY portion of the Software into a competing product
+     or service. This includes, but is not limited to:
+
+     - Individual features, modules, or functionality
+     - UI/UX components, designs, layouts, or visual elements
+     - Algorithms, data structures, or business logic
+     - API designs, schemas, or interface patterns
+     - Code snippets, functions, classes, or libraries
+     - Configuration files, templates, or assets
+     - Database schemas or data models
+     - Workflows, processes, or user interaction patterns
+
+     This prohibition applies regardless of whether you copy the code directly,
+     rewrite it in another programming language, or substantially replicate
+     the functionality or design by studying the Software. If a feature or
+     component exists in the Software and a substantially similar feature
+     appears in a competing product after the creator had access to the
+     Software, this shall be considered a violation of this License.
+
+  c) DERIVATIVE COMPETITION PROHIBITION: Create any product, service, or
+     offering that:
+
+     - Replicates or substantially imitates features of the Software
+     - Is inspired by or derived from studying the Software's implementation
+     - Uses knowledge gained from the Software to build competing functionality
+     - Combines portions of the Software with other code to create a competitor
+
+     This applies to both the existing features at the time of access AND any
+     new features subsequently added to the Software. Competitors who have
+     accessed the Software are prohibited from implementing substantially
+     similar features for a period of five (5) years after such features are
+     publicly released in the Software.
+
+  d) CIRCUMVENTION PROHIBITION: Remove, obscure, or modify any licensing,
+     copyright, trademark, or other proprietary notices contained in the
+     Software. You may not use technical or other means to circumvent any
+     limitations or restrictions in this License.
+
+  e) COMMERCIAL REDISTRIBUTION PROHIBITION: Sell, license, sublicense, or
+     otherwise commercially distribute the Software or derivative works
+     thereof as a standalone product, unless expressly authorized in writing
+     by the Licensor.
+
+  f) TRADEMARK PROHIBITION: Use the Licensor's name, trademarks, service marks,
+     logos, or brand identifiers without prior written permission, except as
+     required for reasonable and customary use in describing the origin of the
+     Software (e.g., "Based on Creet.io").
+
+  g) REVERSE ENGINEERING FOR COMPETITION: Study, analyze, reverse engineer,
+     or examine the Software for the purpose of building competing products
+     or services. This includes:
+
+     - Reading source code to understand implementation details for replication
+     - Analyzing UI/UX patterns for competitive implementation
+     - Studying API behavior or internal workflows for competing products
+     - Benchmarking or feature comparison for competitive development
+
+     Note: This restriction does not apply to security research conducted in
+     good faith and disclosed responsibly to the Licensor.
+
+--------------------------------------------------------------------------------
+                        3. CLARIFICATIONS ON PERMITTED USES
+--------------------------------------------------------------------------------
+
+For the avoidance of doubt, the following uses ARE PERMITTED:
+
+  a) INTERNAL BUSINESS USE: A company may use and modify the Software for its
+     own internal purposes, including displaying testimonials on its own
+     website(s), collecting feedback from its own customers, and integrating
+     the Software into its own internal tools.
+
+  b) CONSULTING AND SERVICES: A consultant or agency may deploy and configure
+     the Software for their clients, provided that:
+     - Each client's deployment is self-hosted by that client
+     - The consultant is not operating a hosted service accessible by
+       multiple unrelated clients
+     - The consultant is not the operator of a competing testimonial
+       management service
+
+  c) INTEGRATION: Developers may integrate the Software into larger
+     applications, provided that the Software does not constitute the primary
+     value proposition of the resulting application and the resulting
+     application does not compete with the Software.
+
+  d) MODIFICATIONS FOR PERSONAL/INTERNAL USE: You may freely modify the
+     Software for your own use or your organization's internal use without
+     any obligation to share those modifications.
+
+--------------------------------------------------------------------------------
+                        4. CONTRIBUTION OF IMPROVEMENTS
+--------------------------------------------------------------------------------
+
+If you choose to contribute modifications, improvements, or bug fixes back to
+the Licensor (e.g., via pull requests to the official repository), you hereby
+grant the Licensor a perpetual, worldwide, royalty-free, non-exclusive license
+to use, copy, modify, distribute, sublicense, and commercialize such
+contributions as part of the Software, without any obligation to you.
+
+Contributions are entirely voluntary, and you have no obligation to contribute
+modifications under this License.
+
+--------------------------------------------------------------------------------
+                        5. DISCLAIMER OF WARRANTIES
+--------------------------------------------------------------------------------
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND NON-INFRINGEMENT.
+
+THE LICENSOR DOES NOT WARRANT THAT THE SOFTWARE WILL BE UNINTERRUPTED,
+ERROR-FREE, OR SECURE. YOU ASSUME ALL RISKS ASSOCIATED WITH THE USE OF THE
+SOFTWARE.
+
+--------------------------------------------------------------------------------
+                        6. LIMITATION OF LIABILITY
+--------------------------------------------------------------------------------
+
+TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT SHALL THE
+LICENSOR BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL,
+PUNITIVE, OR EXEMPLARY DAMAGES, INCLUDING BUT NOT LIMITED TO:
+
+  - Loss of profits, revenue, or data
+  - Business interruption
+  - Loss of goodwill
+  - Cost of procurement of substitute goods or services
+
+WHETHER ARISING IN CONTRACT, TORT (INCLUDING NEGLIGENCE), STRICT LIABILITY,
+OR OTHERWISE, EVEN IF THE LICENSOR HAS BEEN ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGES.
+
+IN NO EVENT SHALL THE LICENSOR'S TOTAL LIABILITY TO YOU FOR ALL DAMAGES
+EXCEED THE AMOUNT OF FIFTY US DOLLARS ($50.00).
+
+--------------------------------------------------------------------------------
+                        7. INDEMNIFICATION
+--------------------------------------------------------------------------------
+
+You agree to indemnify, defend, and hold harmless the Licensor and its
+officers, directors, employees, agents, and successors from and against any
+claims, liabilities, damages, losses, costs, and expenses (including reasonable
+attorneys' fees) arising out of or related to:
+
+  a) Your use of the Software
+  b) Your violation of this License
+  c) Your violation of any third-party rights
+
+--------------------------------------------------------------------------------
+                        8. TERMINATION
+--------------------------------------------------------------------------------
+
+  a) AUTOMATIC TERMINATION: This License and the rights granted hereunder will
+     terminate automatically if you fail to comply with any of the terms and
+     conditions of this License.
+
+  b) EFFECT OF TERMINATION: Upon termination:
+     - You must immediately cease all use of the Software
+     - You must destroy all copies of the Software in your possession or control
+     - Sections 5, 6, 7, and 9 shall survive termination
+
+  c) REINSTATEMENT: If you cure a violation of this License within thirty (30)
+     days of becoming aware of such violation, your rights under this License
+     shall be automatically reinstated, provided that this is your first
+     violation of this License.
+
+--------------------------------------------------------------------------------
+                        9. GENERAL PROVISIONS
+--------------------------------------------------------------------------------
+
+  a) ENTIRE AGREEMENT: This License constitutes the entire agreement between
+     you and the Licensor regarding the Software and supersedes all prior
+     agreements, understandings, and communications.
+
+  b) SEVERABILITY: If any provision of this License is held to be invalid or
+     unenforceable, the remaining provisions shall continue in full force and
+     effect.
+
+  c) NO WAIVER: The failure of the Licensor to exercise or enforce any right
+     or provision of this License shall not constitute a waiver of such right
+     or provision.
+
+  d) ASSIGNMENT: You may not assign or transfer your rights or obligations
+     under this License without the prior written consent of the Licensor.
+     The Licensor may freely assign its rights and obligations under this
+     License.
+
+  e) GOVERNING LAW: This License shall be governed by and construed in
+     accordance with the laws of the jurisdiction in which the Licensor is
+     incorporated, without regard to its conflict of laws principles.
+
+  f) DISPUTE RESOLUTION: Any dispute arising out of or relating to this
+     License shall be resolved through good-faith negotiations. If the
+     parties are unable to resolve the dispute through negotiations, either
+     party may pursue legal remedies in the courts of the Licensor's
+     jurisdiction.
+
+  g) MODIFICATIONS TO LICENSE: The Licensor reserves the right to modify
+     this License for future versions of the Software. However, modifications
+     to this License shall not affect the terms applicable to versions of the
+     Software released before such modifications.
+
+--------------------------------------------------------------------------------
+                        10. COMMERCIAL LICENSING
+--------------------------------------------------------------------------------
+
+If you wish to use the Software in a manner that is not permitted under this
+License (for example, to offer a competing SaaS product or for commercial
+redistribution), please contact the Licensor to discuss commercial licensing
+options.
+
+Commercial licenses are available and may grant you additional rights not
+provided under this community license.
+
+Contact: [Your Contact Email]
+
+================================================================================
+                              END OF LICENSE
+================================================================================
+
+QUICK REFERENCE GUIDE
+---------------------
+
+🎉 THIS SOFTWARE IS FREE TO USE! We encourage adoption and want as many people
+   as possible to use Creet.io for their own websites and projects.
+
+✅ ALLOWED (Go ahead, no permission needed!):
+   • Deploy on your website to collect testimonials from YOUR customers
+   • Use for your personal blog, portfolio, or side projects
+   • Use for your company's website (startups, enterprises, agencies - all OK!)
+   • Self-host on your own servers or cloud (AWS, Vercel, DigitalOcean, etc.)
+   • Modify the code to fit your needs - change colors, add features, whatever!
+   • Integrate with your existing tools and workflows
+   • Use for educational purposes - courses, tutorials, learning
+   • Consultants: Set up self-hosted deployments for your clients
+   • Contributing improvements back (optional, but we'd love it!)
+
+❌ NOT ALLOWED (Competitors only - regular users ignore this):
+   • Building a competing testimonial/social proof SaaS to sell
+   • White-labeling and reselling as your own product
+   • Copying our features into a competing service
+   • Studying our code to build a rival product
+
+⚠️  COMPETITOR RESTRICTIONS:
+   • These restrictions ONLY apply if you're building a competing SaaS
+   • If you're just using it for your own website, you're 100% fine!
+   • Even copying a SINGLE feature into a competitor is prohibited
+   • 5-year restriction on copying new features
+
+💡 QUESTIONS?
+   • Most use cases are allowed - when in doubt, you're probably fine
+   • Contact us for commercial licensing if you want to build a competing product
+
+================================================================================
+
