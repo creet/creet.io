@@ -11,22 +11,15 @@ import {
     Pencil,
     Menu,
     Code,
-    Twitter,
-    Linkedin,
-    Facebook,
     Loader2,
-    MessageSquare,
-    Video,
-    Play,
-    Pause,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ShareWallOfLoveSidebar } from "@/components/ShareWallOfLoveSidebar"
 import { WallDesignStudioSidebar, TabType } from "@/components/WallDesignStudioSidebar"
 import { SelectTestimonialsModal, Testimonial } from "@/components/widgets/SelectTestimonialsModal"
+import { ReorderTestimonialsModal } from "@/components/ReorderTestimonialsModal"
 import Logo from "@/components/ui/Logo"
 import { WallConfig, DEFAULT_WALL_CONFIG, UpdateConfigFn } from "@/types/wall-config"
-import { VideoPlayer } from "@/components/ui/VideoPlayer"
 import { saveWall, getWallById } from "@/lib/actions/walls"
 import { toast, Toaster } from "sonner"
 
@@ -119,89 +112,10 @@ const DEMO_TESTIMONIALS: Testimonial[] = [
     },
 ]
 
-// Source icon helper - returns icon info for various testimonial sources
-const BRAND_LOGOS: Record<string, string> = {
-    'airbnb': 'airbnb.svg',
-    'amazon': 'amazon.svg',
-    'app store': 'app-store.svg',
-    'app_store': 'app-store.svg',
-    'apple podcasts': 'apple-podcasts.svg',
-    'apple_podcasts': 'apple-podcasts.svg',
-    'appsumo': 'appsumo.svg',
-    'capterra': 'capterra.svg',
-    'chrome web store': 'chrome-web-store.svg',
-    'chrome_web_store': 'chrome-web-store.svg',
-    'facebook': 'facebook.svg',
-    'fiverr': 'fiverr.svg',
-    'g2': 'g2.svg',
-    'google': 'google.svg',
-    'homestars': 'homestars.svg',
-    'instagram': 'instagram.svg',
-    'linkedin': 'linkedin.svg',
-    'play store': 'play-store.svg',
-    'play_store': 'play-store.svg',
-    'product hunt': 'product-hunt.svg',
-    'product_hunt': 'product-hunt.svg',
-    'realtor': 'realtor.svg',
-    'reddit': 'reddit.svg',
-    'skillshare': 'skillshare.svg',
-    'sourceforge': 'sourceforge.svg',
-    'tiktok': 'tiktok.svg',
-    'trustpilot': 'trustpilot.svg',
-    'twitter': 'twitter-x.svg',
-    'twitter x': 'twitter-x.svg',
-    'udemy': 'udemy.svg',
-    'whop': 'whop.svg',
-    'wordpress': 'wordpress.svg',
-    'yelp': 'yelp.svg',
-    'youtube': 'youtube.svg',
-    'zillow': 'zillow.svg'
-};
 
-const getBrandLogoUrl = (source: string): string | null => {
-    const s = source.toLowerCase().trim();
-    if (BRAND_LOGOS[s]) {
-        return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/assets/Brands/${BRAND_LOGOS[s]}`;
-    }
-    const normalized = s.replace(/[-_]/g, ' ');
-    if (BRAND_LOGOS[normalized]) {
-        return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/assets/Brands/${BRAND_LOGOS[normalized]}`;
-    }
-    return null;
-};
-
-// Source icon helper - returns icon info for various testimonial sources
-const getSourceIcon = (source: string) => {
-    const s = (source || '').toUpperCase().trim();
-    const imageUrl = getBrandLogoUrl(source);
-
-    if (imageUrl) {
-        // Return image URL with a white background style standard for logos
-        return { imageUrl, bg: 'bg-white', isImage: true };
-    }
-
-    // Twitter/X (Fallback if not in map, though map handles it)
-    if (s.includes('TWITTER') || s === 'X') {
-        return { icon: Twitter, color: 'text-white', bg: 'bg-black' }
-    }
-    // LinkedIn
-    if (s.includes('LINKEDIN')) {
-        return { icon: Linkedin, color: 'text-white', bg: 'bg-[#0A66C2]' }
-    }
-    // Facebook
-    if (s.includes('FACEBOOK')) {
-        return { icon: Facebook, color: 'text-white', bg: 'bg-[#1877F2]' }
-    }
-    // Email
-    if (s.includes('EMAIL')) {
-        return { icon: null, color: 'text-white', bg: 'bg-zinc-700', text: '@' }
-    }
-    // Manual / Other - Use chat bubble icon like dashboard
-    return { icon: MessageSquare, color: 'text-white', bg: 'bg-zinc-700' }
-}
 
 // ===================== TEMPLATE CONFIGURATIONS ===================== //
-// Only Classic as the template
+// Wall of Love templates
 const TEMPLATES = [
     {
         id: "classic",
@@ -210,6 +124,13 @@ const TEMPLATES = [
         preview: "bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50",
         previewImage: "/classicwall.png",
         // previewImage: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/assets/Walls/classicwall.png`,
+    },
+    {
+        id: "modern",
+        name: "Modern",
+        subtitle: "Dark & Bold",
+        preview: "bg-gradient-to-br from-[#0a0f1a] via-[#0d1426] to-[#0a0f1a]",
+        previewImage: "/modernwall.png",
     },
 ]
 
@@ -240,59 +161,7 @@ const CARD_THEMES = [
 
 // ===================== HELPER COMPONENTS ===================== //
 
-const ExpandableContent = ({
-    content,
-    fontFamily,
-    textColorClass,
-    subtitleColorClass
-}: {
-    content: string
-    fontFamily?: string
-    textColorClass: string
-    subtitleColorClass: string
-}) => {
-    const [isExpanded, setIsExpanded] = React.useState(false)
-    // Limit to 200 chars as requested
-    const shouldTruncate = content.length > 200
-
-    if (!shouldTruncate) {
-        return (
-            <p
-                className={cn("text-sm leading-relaxed break-words whitespace-pre-wrap", textColorClass)}
-                style={{ fontFamily }}
-            >
-                {content}
-            </p>
-        )
-    }
-
-    return (
-        <div>
-            <p
-                className={cn(
-                    "text-sm leading-relaxed break-words whitespace-pre-wrap",
-                    textColorClass,
-                    !isExpanded && "line-clamp-6"
-                )}
-                style={{ fontFamily }}
-            >
-                {content}
-            </p>
-            <button
-                onClick={(e) => {
-                    e.stopPropagation()
-                    setIsExpanded(!isExpanded)
-                }}
-                className={cn(
-                    "text-xs font-medium mt-2 hover:underline focus:outline-none flex items-center gap-1",
-                    subtitleColorClass
-                )}
-            >
-                {isExpanded ? "Read Less" : "Read More"}
-            </button>
-        </div>
-    )
-}
+import { WallCard } from "@/components/WallCard"
 
 
 interface WallOfLovePageProps {
@@ -321,6 +190,26 @@ export default function WallOfLovePage({ params }: WallOfLovePageProps) {
     const updateConfig: UpdateConfigFn = React.useCallback((key, value) => {
         setConfig(prev => ({ ...prev, [key]: value }))
     }, [])
+
+    // Handle manual template switch in Design Studio
+    const handleApplyTemplate = React.useCallback((templateId: string) => {
+        const isModern = templateId === 'modern';
+
+        setConfig(prev => ({
+            ...prev,
+            style: templateId as any,
+            // Apply template defaults
+            backgroundColor: isModern ? "#09090b" : "#f5f5f7",
+            cardBackground: isModern ? "#18181b" : "#ffffff",
+            textColor: isModern ? "#ffffff" : "#09090b",
+            accentColor: isModern ? "#22d3ee" : "#fbbf24",
+            cardTheme: isModern ? "modern" : "glassmorphism",
+            headerTitle: isModern ? "Loved by thousands" : "Wall of Love",
+            headerBackground: isModern
+                ? 'linear-gradient(to right, #09090b, #181ab)'
+                : 'linear-gradient(to right, #18181b, #27272a)',
+        }));
+    }, []);
 
     // ===================== UI STATE ===================== //
     const [sidebarOpen, setSidebarOpen] = React.useState(true)
@@ -406,6 +295,7 @@ export default function WallOfLovePage({ params }: WallOfLovePageProps) {
     const [isLoadingSelected, setIsLoadingSelected] = React.useState(false)
     const [isLoadingAll, setIsLoadingAll] = React.useState(false)
     const [hasFetchedAll, setHasFetchedAll] = React.useState(false)
+    const [isReorderModalOpen, setIsReorderModalOpen] = React.useState(false)
 
     // Helper to map DB records to Testimonial interface
     const mapToTestimonial = React.useCallback((t: any): Testimonial => ({
@@ -624,6 +514,17 @@ export default function WallOfLovePage({ params }: WallOfLovePageProps) {
                     subtitleColor: 'text-zinc-400',
                     styleName: 'Cinematic Dark Mode',
                 }
+            case 'modern':
+                return {
+                    containerBg: 'bg-[#09090b]',
+                    cardBg: 'bg-[#18181b]',
+                    cardBorder: 'border border-white/10',
+                    cardShadow: 'shadow-xl shadow-black/50 hover:shadow-cyan-500/20',
+                    cardRadius: 'rounded-xl',
+                    textColor: 'text-white',
+                    subtitleColor: 'text-zinc-400',
+                    styleName: 'Modern Dark Mode',
+                }
             case 'classic':
             default:
                 return {
@@ -642,7 +543,7 @@ export default function WallOfLovePage({ params }: WallOfLovePageProps) {
     // Get current card theme styling - matches embed page exactly
     const getCardThemeConfig = () => {
         const theme = CARD_THEMES.find(t => t.id === config.cardTheme)
-        const isDarkTheme = config.cardTheme === 'cinematic'
+        const isDarkTheme = config.cardTheme === 'cinematic' || config.cardTheme === 'modern'
 
         if (theme) {
             return {
@@ -797,7 +698,7 @@ export default function WallOfLovePage({ params }: WallOfLovePageProps) {
                 <div className="flex-1 flex flex-col overflow-hidden min-w-0">
 
                     {/* Preview Canvas - The "Stage" */}
-                    <div className="flex-1 overflow-auto bg-[#09090b]" style={{ backgroundColor: '#09090b' }}>
+                    <div className="flex-1 overflow-auto bg-[#09090b] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']" style={{ backgroundColor: '#09090b' }}>
                         {/* The Wall Page Itself */}
                         <div
                             className="min-h-full w-full bg-white overflow-hidden transition-all duration-300"
@@ -806,53 +707,51 @@ export default function WallOfLovePage({ params }: WallOfLovePageProps) {
                             {/* Wall Header */}
                             {/* Wall Header - Full Width Hero Banner */}
                             {/* Wall Header - Hero Banner Card */}
-                            <div>
-                                <div className="w-full relative overflow-hidden text-center py-20 px-6 shadow-2xl">
-                                    {/* Gradient Background */}
-                                    <div
-                                        className="absolute inset-0 opacity-100"
-                                        style={{
-                                            backgroundImage: config.headerBackground || 'linear-gradient(to right, #3b82f6, #2563eb)'
-                                        }}
-                                    >
-                                        <div className="absolute inset-0 bg-black/10" />
-                                    </div>
-
-                                    {/* Logo (Top Left Corner) */}
-                                    <div className="absolute top-6 left-6 z-20">
-                                        {config.logoUrl ? (
-                                            <img
-                                                src={config.logoUrl}
-                                                alt="Brand Logo"
-                                                className="object-contain"
-                                                style={{ width: (config.logoSize || 50), height: (config.logoSize || 50) }}
-                                            />
-                                        ) : (
-                                            <Logo size={config.logoSize || 50} color="#bfff00" />
+                            {/* Wall Header */}
+                            {config.style === 'modern' ? (
+                                /* MODERN HEADER STYLE */
+                                <div className="relative pt-20 pb-12 text-center px-6">
+                                    <div className="max-w-4xl mx-auto space-y-6">
+                                        {/* Logo (Centered for Modern) */}
+                                        {config.logoUrl && (
+                                            <div className="flex justify-center mb-8">
+                                                <img
+                                                    src={config.logoUrl}
+                                                    alt="Brand Logo"
+                                                    className="object-contain"
+                                                    style={{ width: (config.logoSize || 60), height: (config.logoSize || 60) }}
+                                                />
+                                            </div>
                                         )}
-                                    </div>
 
-                                    {/* Content */}
-                                    <div className="relative z-10 flex flex-col items-center justify-center space-y-6 max-w-7xl mx-auto">
-
-                                        {/* Title */}
-                                        <h1 className="text-4xl md:text-6xl font-bold text-white tracking-tight drop-shadow-sm">
-                                            {config.headerTitle || 'Wall of Love'}
+                                        {/* Modern Title with Gradient Highlight */}
+                                        <h1 className="text-5xl md:text-7xl font-bold tracking-tight" style={{ color: config.textColor }}>
+                                            {config.headerTitle.includes('thousands') ? (
+                                                <>
+                                                    {config.headerTitle.split('thousands')[0]}
+                                                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#22d3ee] via-[#0ea5e9] to-[#3b82f6]">
+                                                        thousands
+                                                    </span>
+                                                    {config.headerTitle.split('thousands')[1]}
+                                                </>
+                                            ) : (
+                                                config.headerTitle
+                                            )}
                                         </h1>
 
-                                        {/* Subtitle */}
-                                        <p className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto leading-relaxed font-medium">
-                                            {config.headerSubtitle || 'See what our customers are saying about us'}
+                                        {/* Modern Subtitle */}
+                                        <p className="text-xl text-zinc-400 max-w-2xl mx-auto leading-relaxed">
+                                            {config.headerSubtitle}
                                         </p>
 
-                                        {/* CTA Button */}
+                                        {/* Modern CTA */}
                                         {config.showCta && (
-                                            <div className="pt-4">
+                                            <div className="pt-6">
                                                 <a
-                                                    href={config.ctaUrl || '#'}
+                                                    href={config.ctaUrl || (wallId ? `/wall/${wallId}` : '#')}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className="inline-flex items-center justify-center px-8 py-3.5 rounded-full font-bold text-sm bg-black text-white hover:scale-105 active:scale-95 transition-all shadow-xl hover:shadow-2xl"
+                                                    className="inline-flex items-center justify-center px-8 py-4 rounded-full font-bold text-sm bg-cyan-500 text-black hover:bg-cyan-400 hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(34,211,238,0.3)] hover:shadow-[0_0_30px_rgba(34,211,238,0.5)]"
                                                 >
                                                     {config.ctaText || 'Visit our website'}
                                                 </a>
@@ -860,7 +759,63 @@ export default function WallOfLovePage({ params }: WallOfLovePageProps) {
                                         )}
                                     </div>
                                 </div>
-                            </div>
+                            ) : (
+                                /* CLASSIC HEADER STYLE (Hero Banner) */
+                                <div>
+                                    <div className="w-full relative overflow-hidden text-center py-20 px-6 shadow-2xl">
+                                        {/* Gradient Background */}
+                                        <div
+                                            className="absolute inset-0 opacity-100"
+                                            style={{
+                                                backgroundImage: config.headerBackground || 'linear-gradient(to right, #3b82f6, #2563eb)'
+                                            }}
+                                        >
+                                            <div className="absolute inset-0 bg-black/10" />
+                                        </div>
+
+                                        {/* Logo (Top Left Corner) */}
+                                        <div className="absolute top-6 left-6 z-20">
+                                            {config.logoUrl ? (
+                                                <img
+                                                    src={config.logoUrl}
+                                                    alt="Brand Logo"
+                                                    className="object-contain"
+                                                    style={{ width: (config.logoSize || 50), height: (config.logoSize || 50) }}
+                                                />
+                                            ) : (
+                                                <Logo size={config.logoSize || 50} color="#bfff00" />
+                                            )}
+                                        </div>
+
+                                        {/* Content */}
+                                        <div className="relative z-10 flex flex-col items-center justify-center space-y-6 max-w-7xl mx-auto">
+                                            {/* Title */}
+                                            <h1 className="text-4xl md:text-6xl font-bold text-white tracking-tight drop-shadow-sm">
+                                                {config.headerTitle || 'Wall of Love'}
+                                            </h1>
+
+                                            {/* Subtitle */}
+                                            <p className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto leading-relaxed font-medium">
+                                                {config.headerSubtitle || 'See what our customers are saying about us'}
+                                            </p>
+
+                                            {/* CTA Button */}
+                                            {config.showCta && (
+                                                <div className="pt-4">
+                                                    <a
+                                                        href={config.ctaUrl || (wallId ? `/wall/${wallId}` : '#')}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="inline-flex items-center justify-center px-8 py-3.5 rounded-full font-bold text-sm bg-black text-white hover:scale-105 active:scale-95 transition-all shadow-xl hover:shadow-2xl"
+                                                    >
+                                                        {config.ctaText || 'Visit our website'}
+                                                    </a>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
 
                             {/* Testimonials Masonry Grid */}
                             <div className="px-6 pb-8 pt-10">
@@ -869,226 +824,21 @@ export default function WallOfLovePage({ params }: WallOfLovePageProps) {
                                         <Loader2 className="h-8 w-8 animate-spin text-zinc-400" />
                                     </div>
                                 ) : (
-                                    <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 space-y-4">
-                                        {displayTestimonials.map((t: Testimonial, index: number) => {
-
-
-                                            return (
-                                                <div
-                                                    key={t.id}
-                                                    className={cn(
-                                                        "relative break-inside-avoid rounded-xl overflow-hidden transition-transform duration-200 hover:scale-[1.02]",
-                                                        cardTheme.cardBg,
-                                                        cardTheme.cardBorder
-                                                    )}
-                                                    style={{
-                                                        boxShadow: config.shadowIntensity > 0
-                                                            ? `0 4px 20px rgba(0, 0, 0, ${config.shadowIntensity / 100 * 0.3}), 0 2px 8px rgba(0, 0, 0, ${config.shadowIntensity / 100 * 0.15})`
-                                                            : 'none'
-                                                    }}
-                                                >
-                                                    {/* Video Testimonial Layout - Matching text testimonial structure */}
-                                                    {(t as any).type === 'video' && (t as any).videoUrl ? (
-                                                        <div className="h-full flex flex-col">
-                                                            <div className="relative group overflow-hidden rounded-lg bg-zinc-900 border border-white/10 shadow-sm ring-1 ring-black/5">
-                                                                {/* Video Player - Full Cover */}
-                                                                <div className="aspect-video relative">
-                                                                    <VideoPlayer
-                                                                        url={(t as any).videoUrl}
-                                                                        poster={(t as any).videoThumbnail}
-                                                                        showControls={true}
-                                                                        showPlayPauseButton={false} // Use custom overlay button
-                                                                        showDurationBadge={false}
-                                                                        className="w-full h-full object-cover"
-                                                                        customOverlay={({ isPlaying, togglePlayback }) => (
-                                                                            <>
-                                                                                {/* Gradient Overlay - deeper and taller for premium look */}
-                                                                                <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black/90 via-black/40 to-transparent pointer-events-none" />
-
-                                                                                {/* Overlay Content Container */}
-                                                                                <div className="absolute inset-0 flex flex-col justify-end p-4 z-10">
-                                                                                    <div className="flex items-end justify-between w-full gap-4">
-                                                                                        {/* Left Side: Profile Info */}
-                                                                                        <div className="text-left">
-                                                                                            {/* Rating Stars - Only if > 0 */}
-                                                                                            {t.rating > 0 && (
-                                                                                                <div className="flex gap-1 mb-1.5">
-                                                                                                    {Array.from({ length: t.rating }).map((_, i) => (
-                                                                                                        <Star
-                                                                                                            key={i}
-                                                                                                            className="w-3.5 h-3.5 fill-current"
-                                                                                                            style={{
-                                                                                                                color: config.accentColor || "#fbbf24"
-                                                                                                            }}
-                                                                                                        />
-                                                                                                    ))}
-                                                                                                </div>
-                                                                                            )}
-
-                                                                                            {/* Name */}
-                                                                                            <p className="font-semibold text-white text-base leading-tight drop-shadow-sm">
-                                                                                                {t.authorName}
-                                                                                            </p>
-
-                                                                                            {/* Title */}
-                                                                                            <p className="text-xs text-white/80 mt-0.5 font-medium drop-shadow-sm">
-                                                                                                {(t as any).company || (t as any).authorTitle}
-                                                                                            </p>
-                                                                                        </div>
-
-                                                                                        {/* Right Side: Play/Pause Button */}
-                                                                                        <button
-                                                                                            onClick={togglePlayback}
-                                                                                            aria-label={isPlaying ? "Pause" : "Play"}
-                                                                                            className="rounded-full p-2 text-white duration-200 hover:bg-white/20 hover:backdrop-blur-sm mb-0.5 shrink-0 opacity-0 group-hover/video:opacity-100 transition-all scale-95 hover:scale-100"
-                                                                                        >
-                                                                                            {isPlaying ? (
-                                                                                                <Pause className="w-6 h-6 fill-current" />
-                                                                                            ) : (
-                                                                                                <Play className="w-6 h-6 fill-current" />
-                                                                                            )}
-                                                                                        </button>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </>
-                                                                        )}
-                                                                    />
-
-
-                                                                </div>
-                                                            </div>
-
-                                                            {/* Optional text content below video - Matching text testimonial style */}
-                                                            {t.content && (
-                                                                <div className="pt-3 px-1 bg-inherit">
-                                                                    <ExpandableContent
-                                                                        content={t.content}
-                                                                        fontFamily={config.fontFamily}
-                                                                        textColorClass={cardTheme.textColor}
-                                                                        subtitleColorClass={cardTheme.subtitleColor}
-                                                                    />
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                    ) : (
-                                                        /* Text Testimonial Layout - Original */
-                                                        <div className="p-5">
-                                                            {/* Author row with Source Icon */}
-                                                            <div className="flex items-center justify-between mb-3">
-                                                                {/* Author Info */}
-                                                                <div className="flex items-center gap-3">
-                                                                    {(t as any).authorAvatarUrl ? (
-                                                                        <img
-                                                                            src={(t as any).authorAvatarUrl}
-                                                                            alt={t.authorName}
-                                                                            className="w-10 h-10 rounded-full object-cover shrink-0"
-                                                                        />
-                                                                    ) : (
-                                                                        <div
-                                                                            className={cn(
-                                                                                "w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-white shrink-0",
-                                                                                (t as any).avatarBg || "bg-violet-600"
-                                                                            )}
-                                                                        >
-                                                                            {t.authorName.charAt(0)}
-                                                                        </div>
-                                                                    )}
-                                                                    <div>
-                                                                        <p
-                                                                            className={cn("font-semibold text-sm", cardTheme.textColor)}
-                                                                            style={{ fontFamily: config.fontFamily }}
-                                                                        >
-                                                                            {t.authorName}
-                                                                        </p>
-                                                                        <p
-                                                                            className={cn("text-xs", cardTheme.subtitleColor)}
-                                                                            style={{ fontFamily: config.fontFamily }}
-                                                                        >
-                                                                            {(t as any).company || (t as any).authorTitle}
-                                                                        </p>
-                                                                    </div>
-                                                                </div>
-
-                                                                {/* Source Icon */}
-                                                                {/* Source Icon */}
-                                                                {config.showSourceIcon && (() => {
-                                                                    // Do not show logo for manual testimonials
-                                                                    if ((t.source || '').toUpperCase() === 'MANUAL') return null
-
-                                                                    const sourceInfo = getSourceIcon(t.source)
-                                                                    const IconComponent = sourceInfo.icon
-                                                                    return (
-                                                                        <div className={cn(
-                                                                            "w-7 h-7 rounded-full flex items-center justify-center shrink-0 overflow-hidden",
-                                                                            sourceInfo.bg
-                                                                        )}>
-                                                                            {(sourceInfo as any).isImage ? (
-                                                                                <img
-                                                                                    src={(sourceInfo as any).imageUrl}
-                                                                                    alt={t.source}
-                                                                                    className="w-4 h-4 object-contain"
-                                                                                />
-                                                                            ) : IconComponent ? (
-                                                                                <IconComponent className={cn("w-4 h-4", sourceInfo.color)} />
-                                                                            ) : (
-                                                                                <span className={cn("text-xs font-bold", sourceInfo.color)}>
-                                                                                    {sourceInfo.text}
-                                                                                </span>
-                                                                            )}
-                                                                        </div>
-                                                                    )
-                                                                })()}
-                                                            </div>
-
-                                                            <div className="flex gap-0.5 mb-3">
-                                                                {Array.from({ length: 5 }).map((_, i) => (
-                                                                    <Star
-                                                                        key={i}
-                                                                        className="w-4 h-4"
-                                                                        style={{
-                                                                            fill: i < t.rating ? config.accentColor : (config.cardTheme === 'cinematic' ? '#52525b' : '#e4e4e7'),
-                                                                            color: i < t.rating ? config.accentColor : (config.cardTheme === 'cinematic' ? '#52525b' : '#e4e4e7'),
-                                                                        }}
-                                                                    />
-                                                                ))}
-                                                            </div>
-
-                                                            <ExpandableContent
-                                                                content={t.content}
-                                                                fontFamily={config.fontFamily}
-                                                                textColorClass={cardTheme.textColor}
-                                                                subtitleColorClass={cardTheme.subtitleColor}
-                                                            />
-
-                                                            {/* Attachments (Text Testimonials) */}
-                                                            {config.showAttachments && (t as any).attachments && (t as any).attachments.length > 0 && (
-                                                                <div className="flex flex-wrap gap-2 mt-4">
-                                                                    {(t as any).attachments.map((att: any, i: number) => (
-                                                                        <div
-                                                                            key={i}
-                                                                            className="relative w-16 h-16 rounded-lg overflow-hidden border border-zinc-200/20 bg-zinc-900/5 dark:bg-white/5 ring-1 ring-inset ring-black/5 group"
-                                                                        >
-                                                                            {att.type === 'video' ? (
-                                                                                <div className="flex items-center justify-center w-full h-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500">
-                                                                                    <Video className="w-6 h-6" />
-                                                                                </div>
-                                                                            ) : (
-                                                                                <img
-                                                                                    src={att.url}
-                                                                                    alt="Attachment"
-                                                                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                                                                                    loading="lazy"
-                                                                                />
-                                                                            )}
-                                                                        </div>
-                                                                    ))}
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            )
-                                        })}
+                                    <div
+                                        className="gap-4 space-y-4 max-w-7xl mx-auto"
+                                        style={{
+                                            columnCount: config.columns || 3,
+                                            columnGap: '1rem'
+                                        }}
+                                    >
+                                        {displayTestimonials.map((t: Testimonial) => (
+                                            <WallCard
+                                                key={t.id}
+                                                testimonial={t}
+                                                config={config}
+                                                theme={cardTheme}
+                                            />
+                                        ))}
                                     </div>
                                 )}
                             </div>
@@ -1117,7 +867,9 @@ export default function WallOfLovePage({ params }: WallOfLovePageProps) {
                     templates={TEMPLATES}
                     cardThemes={CARD_THEMES}
                     onSelectTestimonials={handleOpenSelectModal}
+                    onReorderTestimonials={() => setIsReorderModalOpen(true)}
                     selectedTestimonialsCount={selectedCount}
+                    onApplyTemplate={handleApplyTemplate}
                 />
             </div>
 
@@ -1136,6 +888,30 @@ export default function WallOfLovePage({ params }: WallOfLovePageProps) {
                 selectedIds={selectedTestimonialIds}
                 onSelectionChange={handleSelectionChange}
                 isLoading={isLoadingAll}
+            />
+
+            {/* ===================== REORDER TESTIMONIALS MODAL ===================== */}
+            <ReorderTestimonialsModal
+                isOpen={isReorderModalOpen}
+                onClose={() => setIsReorderModalOpen(false)}
+                testimonials={selectedTestimonials.map(t => ({
+                    id: t.id,
+                    author_name: t.authorName,
+                    author_avatar_url: t.authorAvatarUrl,
+                    content: t.content,
+                    type: t.type,
+                    rating: t.rating,
+                }))}
+                onSaveOrder={(orderedIds) => {
+                    // Update the order of selected testimonials
+                    setSelectedTestimonialIds(orderedIds);
+                    // Reorder the testimonials array to match
+                    const reorderedTestimonials = orderedIds
+                        .map(id => selectedTestimonials.find(t => t.id === id))
+                        .filter((t): t is Testimonial => t !== undefined);
+                    setSelectedTestimonials(reorderedTestimonials);
+                    toast.success('Testimonial order updated!');
+                }}
             />
 
 

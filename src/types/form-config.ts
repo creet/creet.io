@@ -10,6 +10,8 @@ export interface Form {
     id: string;
     name: string;
   };
+  /** Number of testimonials submitted via this form (computed, not stored) */
+  response_count?: number;
 }
 
 // ---------------------------------------------------------------- //

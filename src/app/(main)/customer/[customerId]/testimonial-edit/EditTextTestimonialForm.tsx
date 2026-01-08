@@ -16,9 +16,10 @@ interface EditTextTestimonialFormProps {
     testimonial: any;
     onClose: () => void;
     isEmbedded?: boolean;
+    onUpdate?: (updatedData: any) => void;
 }
 
-export function EditTextTestimonialForm({ testimonial, onClose, isEmbedded = false }: EditTextTestimonialFormProps) {
+export function EditTextTestimonialForm({ testimonial, onClose, isEmbedded = false, onUpdate }: EditTextTestimonialFormProps) {
     const router = useRouter();
     // Prioritize top level, then raw data
     const [title, setTitle] = useState(testimonial.title || testimonial.raw?.data?.title || "");
@@ -123,9 +124,37 @@ export function EditTextTestimonialForm({ testimonial, onClose, isEmbedded = fal
 
             await updateTestimonialContent(testimonial.id, updateData);
 
+            // Construct new state to pass back up immediately
+            if (onUpdate) {
+                onUpdate({
+                    ...testimonial,
+                    title: title,
+                    rating: rating,
+                    text: content, // Map message -> text for UI display
+                    content: content,
+                    source: source,
+                    created_at: date ? new Date(date).toISOString() : testimonial.created_at, // Approximate update
+                    raw: {
+                        ...testimonial.raw,
+                        data: {
+                            ...testimonial.raw?.data,
+                            title: title,
+                            message: content,
+                            rating: rating,
+                            source: source,
+                            testimonial_date: date,
+                            original_post_url: postUrl,
+                            attachments: attachments
+                        }
+                    },
+                    // Update attachments list for UI
+                    attachments: attachments.map(a => typeof a === 'string' ? { type: 'image', url: a } : a)
+                });
+            }
+
             toast.dismiss();
             toast.success("Testimonial updated successfully!");
-            router.refresh();
+            router.refresh(); // Still refresh to ensure consistency
             onClose();
 
         } catch (error: any) {

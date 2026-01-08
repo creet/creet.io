@@ -216,13 +216,12 @@ export async function getTestimonialsByIds(ids: string[]) {
         return { data: null, error: "Unauthorized" };
     }
 
+    // Fetch all testimonials in a single query (no ordering - we'll order by input array)
     const { data, error } = await supabase
         .from("testimonials")
         .select("*")
         .eq("user_id", user.id)
-        .in("id", ids)
-        .order("created_at", { ascending: false })
-        .order("id", { ascending: true });
+        .in("id", ids);
 
     if (error) {
         console.error("Error fetching testimonials by IDs:", error);
@@ -283,7 +282,12 @@ export async function getTestimonialsByIds(ids: string[]) {
         };
     });
 
-    return { data: transformedData, error: null };
+    // Reorder to match input array order (preserves user's custom ordering)
+    const orderedData = ids
+        .map(id => transformedData.find(t => t.id === id))
+        .filter((t): t is NonNullable<typeof t> => t !== undefined);
+
+    return { data: orderedData, error: null };
 }
 
 /**

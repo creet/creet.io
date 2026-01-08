@@ -26,23 +26,50 @@ const FormsPage = async () => {
     return <FormsPageClient initialForms={[]} />;
   }
 
-  const { data: forms, error } = await supabase
-    .from("forms")
-    .select(
-      `
-      *,
-      project:projects!inner(id, name)
-    `
-    )
-    .eq("project_id", activeProjectId)
-    .order("created_at", { ascending: false });
+  // Fetch forms and response counts in parallel for efficiency
+  const [formsResult, countsResult] = await Promise.all([
+    // Query 1: Get all forms for the project
+    supabase
+      .from("forms")
+      .select(`
+        *,
+        project:projects!inner(id, name)
+      `)
+      .eq("project_id", activeProjectId)
+      .order("created_at", { ascending: false }),
 
-  if (error) {
-    console.error("Error fetching forms:", error);
+    // Query 2: Get response counts grouped by form_id
+    // This uses json column access: data->>'form_id' contains the form UUID
+    supabase
+      .from("testimonials")
+      .select("id, data->form_id")
+      .eq("project_id", activeProjectId)
+      .not("data->form_id", "is", null)
+  ]);
+
+  if (formsResult.error) {
+    console.error("Error fetching forms:", formsResult.error);
     return <FormsPageClient initialForms={[]} />;
   }
 
-  return <FormsPageClient initialForms={forms as Form[]} />;
+  // Build a count map from testimonials
+  const countMap: Record<string, number> = {};
+  if (countsResult.data) {
+    for (const t of countsResult.data) {
+      const formId = (t as any).form_id;
+      if (formId) {
+        countMap[formId] = (countMap[formId] || 0) + 1;
+      }
+    }
+  }
+
+  // Merge counts into forms
+  const formsWithCounts = (formsResult.data || []).map((form: any) => ({
+    ...form,
+    response_count: countMap[form.id] || 0,
+  }));
+
+  return <FormsPageClient initialForms={formsWithCounts as Form[]} />;
 };
 
 export default FormsPage;

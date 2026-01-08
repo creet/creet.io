@@ -229,7 +229,7 @@ function FormCard({ form, index, onRequestDelete }: { form: Form, index: number,
                 <div className="flex items-center gap-4 py-3 border-t border-white/[0.04] text-sm">
                     <div className="flex items-center gap-2 text-zinc-400">
                         <Users className="size-3.5" />
-                        <span className="font-medium text-zinc-300">0</span>
+                        <span className="font-medium text-zinc-300">{form.response_count ?? 0}</span>
                         <span className="text-zinc-500">responses</span>
                     </div>
                     <div className="w-px h-3 bg-white/10" />

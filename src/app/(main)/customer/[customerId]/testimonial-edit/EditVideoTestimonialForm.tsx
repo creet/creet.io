@@ -17,12 +17,13 @@ interface EditVideoTestimonialFormProps {
     testimonial: any;
     onClose: () => void;
     isEmbedded?: boolean;
+    onUpdate?: (updatedData: any) => void;
 }
 
-export function EditVideoTestimonialForm({ testimonial, onClose, isEmbedded = false }: EditVideoTestimonialFormProps) {
+export function EditVideoTestimonialForm({ testimonial, onClose, isEmbedded = false, onUpdate }: EditVideoTestimonialFormProps) {
     const router = useRouter();
     const [title, setTitle] = useState(testimonial.title || "");
-    const [rating, setRating] = useState(testimonial.rating || 5);
+    const [rating, setRating] = useState(testimonial.rating || 0);
     const [message, setMessage] = useState(testimonial.raw?.data?.message || "");
 
     const initialVideoUrl = testimonial.attachments?.find((a: any) => a.type === 'video')?.url ||
@@ -230,11 +231,40 @@ export function EditVideoTestimonialForm({ testimonial, onClose, isEmbedded = fa
                 updateData.trim_end = null;
             }
 
-            const result = await updateTestimonialContent(testimonial.id, updateData);
+            await updateTestimonialContent(testimonial.id, updateData);
+
+            if (onUpdate) {
+                onUpdate({
+                    ...testimonial,
+                    title: title,
+                    rating: rating,
+                    text: message, // Map message -> text for UI
+                    content: message,
+                    source: source,
+                    video_url: finalVideoUrl,
+                    video_thumbnail: finalThumbnails[selectedThumbnailIndex],
+                    created_at: date ? new Date(date).toISOString() : testimonial.created_at,
+                    raw: {
+                        ...testimonial.raw,
+                        data: {
+                            ...testimonial.raw?.data,
+                            ...updateData,
+                            trim_start: updateData.trim_start !== undefined ? updateData.trim_start : testimonial.raw?.data?.trim_start,
+                            trim_end: updateData.trim_end !== undefined ? updateData.trim_end : testimonial.raw?.data?.trim_end
+                        }
+                    },
+                    // Update attachments list for UI (include video & thumbnails)
+                    attachments: [
+                        ...finalThumbnails.map(url => ({ type: 'image', url })),
+                        ...(finalVideoUrl ? [{ type: 'video', url: finalVideoUrl }] : [])
+                    ]
+                });
+            }
+
 
             toast.dismiss();
             toast.success("Testimonial updated successfully!");
-            router.refresh();
+            router.refresh(); // Still refresh to ensure consistency
             onClose();
 
         } catch (error: any) {
@@ -413,11 +443,11 @@ export function EditVideoTestimonialForm({ testimonial, onClose, isEmbedded = fa
                                         className="focus:outline-none transition-all hover:scale-110 active:scale-95 group"
                                     >
                                         <Star
-                                            className={`size-6 transition-colors ${star <= rating
+                                            className={`size-6 transition-colors ${rating > 0 && star <= rating
                                                 ? "fill-amber-500 text-amber-500 drop-shadow-sm"
                                                 : "fill-zinc-800/50 text-zinc-700 group-hover:text-zinc-500"
                                                 }`}
-                                            strokeWidth={star <= rating ? 0 : 1.5}
+                                            strokeWidth={rating > 0 && star <= rating ? 0 : 1.5}
                                         />
                                     </button>
                                 ))}

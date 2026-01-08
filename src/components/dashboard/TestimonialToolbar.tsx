@@ -148,7 +148,7 @@ export function TestimonialToolbar({ testimonialId, testimonialData, isVideo, on
                     <Button
                         variant="ghost"
                         onClick={() => setIsDeleteDialogOpen(true)}
-                        className="h-10 px-4 gap-2.5 text-zinc-400 hover:text-red-400 hover:bg-red-500/10 border border-transparent hover:border-red-500/20 rounded-xl transition-all duration-200"
+                        className="h-10 px-4 gap-2.5 text-zinc-400 hover:!text-red-400 hover:!bg-red-500/10 border border-transparent hover:!border-red-500/20 rounded-xl transition-all duration-200"
                     >
                         <Trash2 className="size-4" />
                         <span className="font-medium">Delete</span>

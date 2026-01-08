@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { Sparkles, Heart, Save, Play, Star, Trash2, Pencil, Loader2, X } from "lucide-react"
+import { Sparkles, Heart, Save, Play, Trash2, Pencil, Loader2, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { getWalls, deleteWall, saveWall, WallRecord } from "@/lib/actions/walls"
 
@@ -13,16 +13,6 @@ const shadows = {
     level2: '0 4px 8px rgba(0,0,0,0.4), 0 12px 32px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.06), inset 0 1px 0 0 rgba(255,255,255,0.06)',
     level3: '0 8px 16px rgba(0,0,0,0.5), 0 24px 48px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.08), inset 0 1px 0 0 rgba(255,255,255,0.1)',
 }
-
-// Demo testimonials for Wall of Love previews
-const DEMO_TESTIMONIALS = [
-    { name: "Joe Rogan", title: "Entrepreneur & Podcaster", content: "We solve web and mobile design problems with clarity and precision." },
-    { name: "Celia Tinson", title: "Founder @ SQUAD", content: "Pretty much everyone who approaches for frontend work is extremely talented." },
-    { name: "Steve Deno", title: "Animator", content: "This is really useful. Had to share this with everyone at my company." },
-    { name: "Marc Cooper", title: "Designer at DevLabs", content: "This was like a whole project for the team but this widget made it so easy." },
-    { name: "Nitish Singh", title: "Product Lead", content: "Congrats on the launch! amazing product. This is amazing and saving lots." },
-    { name: "John Smith", title: "CEO @ StartupCo", content: "Have the ops for revenues, bumping your latest project on us." },
-]
 
 // Wall of Love template - Only Classic
 const WALL_TEMPLATES = [
@@ -39,50 +29,21 @@ const WALL_TEMPLATES = [
         previewImage: "/classicwall.png",
         // previewImage: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/assets/Walls/classicwall.png`,
     },
+    {
+        id: "modern",
+        styleId: "modern",
+        name: "Modern",
+        description: "Sleek dark mode design with vibrant gradients for a premium feel",
+        bgColor: "bg-[#09090b]",
+        cardBg: "bg-[#18181b]",
+        textColor: "text-white",
+        accentColor: "text-cyan-400",
+        borderColor: "border-white/10",
+        previewImage: "/modernwall.png", // We'll need this asset later, using placeholder for now is fine or reuse existing
+    },
 ]
 
-// Mini testimonial card for preview
-function MiniTestimonialCard({
-    testimonial,
-    template,
-    isSmall = false
-}: {
-    testimonial: typeof DEMO_TESTIMONIALS[0]
-    template: typeof WALL_TEMPLATES[0]
-    isSmall?: boolean
-}) {
-    return (
-        <div className={cn(
-            "rounded-lg p-2 transition-all border",
-            template.cardBg,
-            template.borderColor
-        )}>
-            <div className="flex items-center gap-1.5 mb-1">
-                <div className="w-4 h-4 rounded-full flex items-center justify-center text-[6px] font-bold text-white shrink-0 bg-gradient-to-br from-purple-500 to-pink-500">
-                    {testimonial.name.split(' ').map(n => n[0]).join('')}
-                </div>
-                <div className="min-w-0">
-                    <p className={cn("text-[7px] font-semibold truncate leading-tight", template.textColor)}>
-                        {testimonial.name}
-                    </p>
-                    <p className={cn("text-[5px] truncate opacity-60", template.textColor)}>
-                        {testimonial.title}
-                    </p>
-                </div>
-            </div>
-            <div className="flex gap-0.5 mb-1">
-                {[...Array(5)].map((_, i) => (
-                    <Star key={i} className={cn("w-2 h-2 fill-current", template.accentColor)} />
-                ))}
-            </div>
-            {!isSmall && (
-                <p className={cn("text-[6px] line-clamp-2 leading-relaxed opacity-80", template.textColor)}>
-                    {testimonial.content}
-                </p>
-            )}
-        </div>
-    )
-}
+
 
 // Wall of Love template preview card
 function WallTemplateCard({
@@ -305,7 +266,7 @@ export default function WallOfLoveClient({ projectId }: WallOfLoveClientProps) {
     // Handle template click - open dialog
     const handleTemplateClick = (template: typeof WALL_TEMPLATES[0]) => {
         setSelectedTemplate(template)
-        setNewWallName("")
+        setNewWallName("Wall of Love")
         setIsCreateDialogOpen(true)
     }
 
@@ -327,10 +288,12 @@ export default function WallOfLoveClient({ projectId }: WallOfLoveClientProps) {
                 slug,
                 config: {
                     style: selectedTemplate.styleId,
-                    backgroundColor: "#f5f5f7",
-                    cardBackground: "#ffffff",
-                    textColor: "#09090b",
-                    accentColor: "#fbbf24",
+                    // Dynamic defaults based on template
+                    backgroundColor: selectedTemplate.id === 'modern' ? "#09090b" : "#f5f5f7",
+                    cardBackground: selectedTemplate.id === 'modern' ? "#18181b" : "#ffffff",
+                    textColor: selectedTemplate.id === 'modern' ? "#ffffff" : "#09090b",
+                    accentColor: selectedTemplate.id === 'modern' ? "#22d3ee" : "#fbbf24",
+                    cardTheme: selectedTemplate.id === 'modern' ? "modern" : "glassmorphism", // Set default card theme
                     borderRadius: 16,
                     showRatings: true,
                     showDates: false,
@@ -338,13 +301,15 @@ export default function WallOfLoveClient({ projectId }: WallOfLoveClientProps) {
                     columns: 3,
                     layout: "masonry",
                     cardStyle: "shadow",
-                    headerTitle: "Wall of Love",
-                    headerSubtitle: "See what our customers are saying",
+                    headerTitle: selectedTemplate.id === 'modern' ? "Loved by thousands" : "Wall of Love",
+                    headerSubtitle: "See what our customers have to say about their experience. Real reviews from real people who trust us.",
                     showHeader: true,
                     showCta: true,
                     ctaText: "Visit our website",
-                    ctaUrl: "#",
-                    headerBackground: 'linear-gradient(to right, #18181b, #27272a)',
+                    ctaUrl: "https://example.com",
+                    headerBackground: selectedTemplate.id === 'modern'
+                        ? 'linear-gradient(to right, #09090b, #181ab)' // Dark gradient for modern
+                        : 'linear-gradient(to right, #18181b, #27272a)',
                 },
                 selectedTestimonialIds: [],
                 isPublished: false, // Start as draft
@@ -532,6 +497,10 @@ export default function WallOfLoveClient({ projectId }: WallOfLoveClientProps) {
                                 onChange={(e) => setNewWallName(e.target.value)}
                                 placeholder="My Awesome Wall"
                                 autoFocus
+                                onFocus={(e) => {
+                                    const val = e.target.value;
+                                    e.target.setSelectionRange(val.length, val.length);
+                                }}
                                 className="w-full bg-zinc-900/50 border border-zinc-800 rounded-lg px-4 py-2.5 text-zinc-300 placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]/20 focus:border-[var(--color-accent)]/50 transition-all text-sm"
                                 onKeyDown={(e) => {
                                     if (e.key === 'Enter' && newWallName.trim()) {

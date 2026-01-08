@@ -3,9 +3,10 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Copy, Edit2, Mail, Trash2, Video, MessageSquare, Twitter, Linkedin, Star } from "lucide-react";
+import { Copy, Edit2, Mail, Trash2, Video, MessageSquare, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import { BrandIcon } from "@/lib/brands/BrandIcon";
 
 interface TestimonialRowCardProps {
     testimonial: {
@@ -52,30 +53,6 @@ const getSourceName = (source: string): string => {
     return source.charAt(0).toUpperCase() + source.slice(1);
 };
 
-import { getBrandIcon, BRAND_ICONS } from "@/lib/brands/icons";
-
-const SourceIcon = ({ source }: { source: string }) => {
-    const s = source.toLowerCase();
-
-    // Fallbacks for generic types (Manual, Video, Email) - Keep existing behavior as requested
-    if (s.includes("manual")) return <MessageSquare className="size-4" />;
-    if (s.includes("video")) return <Video className="size-4" />;
-    if (s.includes("email")) return <Mail className="size-4" />;
-
-    // Try to get a brand icon
-    // We normalize locally to check existence, similar to getBrandIcon logic
-    const normalized = s.trim().replace(/[\s-]/g, '_');
-    const isKnownBrand = (normalized in BRAND_ICONS) || normalized === 'twitter' || normalized === 'x';
-
-    if (isKnownBrand) {
-        const Icon = getBrandIcon(source);
-        return <Icon className="size-5" />;
-    }
-
-    // Default fallback
-    return <MessageSquare className="size-4" />;
-};
-
 const getInitials = (name: string) => {
     return name
         .split(' ')
@@ -85,18 +62,6 @@ const getInitials = (name: string) => {
         .toUpperCase();
 };
 
-const getSourceStyles = (source: string): string => {
-    const s = source.toLowerCase();
-    if (s.includes("twitter") || s.includes("x")) return "bg-sky-500/10 border-sky-500/20 text-sky-500 hover:bg-sky-500/20 hover:border-sky-500/30";
-    if (s.includes("linkedin")) return "bg-blue-600/10 border-blue-600/20 text-blue-500 hover:bg-blue-600/20 hover:border-blue-600/30";
-    // Video/Email colors
-    if (s.includes("video")) return "bg-purple-500/10 border-purple-500/20 text-purple-400 hover:bg-purple-500/20 hover:border-purple-500/30";
-    if (s.includes("email")) return "bg-indigo-500/10 border-indigo-500/20 text-indigo-400 hover:bg-indigo-500/20 hover:border-indigo-500/30";
-
-    return "bg-zinc-800/50 border-zinc-700/50 text-zinc-400 hover:bg-zinc-800 hover:border-zinc-700";
-};
-
-// Use the reusable VideoPlayer component
 import { VideoPlayer } from "@/components/ui/VideoPlayer";
 
 const VideoPreview = ({ url, poster, trimStart, trimEnd }: { url: string; poster?: string; trimStart?: number; trimEnd?: number }) => {
@@ -268,12 +233,37 @@ export function TestimonialRowCard({ testimonial, onStatusChange, onDelete, onEd
                     {/* Source */}
                     <div className="flex items-center justify-center w-[60px]">
                         <div className="relative group/tooltip">
-                            <div className={cn(
-                                "size-8 rounded-lg border flex items-center justify-center transition-all duration-200 cursor-default",
-                                getSourceStyles(testimonial.source)
-                            )}>
-                                <SourceIcon source={testimonial.source} />
-                            </div>
+                            {(() => {
+                                const s = testimonial.source.toLowerCase();
+                                const isManual = s.includes("manual");
+                                const isVideo = s.includes("video");
+                                const isEmail = s.includes("email");
+
+                                if (isManual || isVideo || isEmail) {
+                                    return (
+                                        <div className={cn(
+                                            "size-6 rounded-lg border flex items-center justify-center transition-all duration-200 cursor-default",
+                                            isManual ? "bg-zinc-800/50 border-zinc-700/50 text-zinc-400" :
+                                                isVideo ? "bg-purple-500/10 border-purple-500/20 text-purple-400" :
+                                                    "bg-indigo-500/10 border-indigo-500/20 text-indigo-400"
+                                        )}>
+                                            {isManual && <MessageSquare className="w-[75%] h-[75%]" />}
+                                            {isVideo && <Video className="w-[75%] h-[75%]" />}
+                                            {isEmail && <Mail className="w-[75%] h-[75%]" />}
+                                        </div>
+                                    );
+                                }
+
+                                return (
+                                    <BrandIcon
+                                        brandId={testimonial.source}
+                                        size={24}
+                                        showBackground
+                                        variant="rounded"
+                                    />
+                                );
+                            })()}
+
                             <div className="absolute bottom-full right-[-50%] translate-x-1/2 mb-2 px-2 py-1 text-xs font-medium text-white bg-zinc-900 border border-zinc-800 rounded-md shadow-lg opacity-0 group-hover/tooltip:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
                                 {getSourceName(testimonial.source)}
                             </div>

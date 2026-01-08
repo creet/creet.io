@@ -84,6 +84,11 @@ export function CustomerContentWrapper({ customer, testimonials: initialTestimon
         });
     };
 
+    // Callback to update a testimonial in local state
+    const handleUpdateTestimonial = (updatedTestimonial: any) => {
+        setTestimonials(prev => prev.map(t => t.id === updatedTestimonial.id ? { ...t, ...updatedTestimonial } : t));
+    };
+
     const [isRedirecting, setIsRedirecting] = useState(false);
 
     // Callback to remove a testimonial from local state
@@ -345,12 +350,14 @@ export function CustomerContentWrapper({ customer, testimonials: initialTestimon
                                                                 testimonial={testimonial}
                                                                 onClose={() => setEditingId(null)}
                                                                 isEmbedded={true}
+                                                                onUpdate={handleUpdateTestimonial}
                                                             />
                                                         ) : (
                                                             <EditTextTestimonialForm
                                                                 testimonial={testimonial}
                                                                 onClose={() => setEditingId(null)}
                                                                 isEmbedded={true}
+                                                                onUpdate={handleUpdateTestimonial}
                                                             />
                                                         )}
                                                     </div>

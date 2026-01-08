@@ -7,6 +7,7 @@ import { Sparkles, LayoutGrid, Save, Trash2, Pencil, Loader2, X } from "lucide-r
 import { WIDGET_MODELS } from "@/lib/widget-models"
 import { cn } from "@/lib/utils"
 import { getWidgets, deleteWidget, saveWidget, WidgetRecord } from "@/lib/actions/widgets"
+import { getTestimonials } from "@/lib/actions/testimonials"
 import { createWidgetConfig, WidgetType } from "@/types/widget-config"
 
 // Design system shadow presets
@@ -167,7 +168,7 @@ export default function WidgetsClient({ projectId }: WidgetsClientProps) {
     // Handle template click - open dialog
     const handleTemplateClick = (template: typeof WIDGET_MODELS[0]) => {
         setSelectedTemplate(template)
-        setNewWidgetName("")
+        setNewWidgetName("My Widget")
         setIsCreateDialogOpen(true)
     }
 
@@ -177,6 +178,24 @@ export default function WidgetsClient({ projectId }: WidgetsClientProps) {
 
         setIsCreating(true)
         try {
+            // Fetch top 3 latest testimonials to pre-populate widget
+            let initialSelectedIds: string[] = []
+            if (projectId) {
+                try {
+                    const { data } = await getTestimonials({
+                        projectId,
+                        limit: 3,
+                        sortBy: 'created_at',
+                        sortOrder: 'desc'
+                    })
+                    if (data && data.length > 0) {
+                        initialSelectedIds = data.map((t: any) => t.id)
+                    }
+                } catch (err) {
+                    console.error("Failed to fetch initial testimonials", err)
+                }
+            }
+
             // Create widget with full default config to ensure colors/theme are correct from start
             const initialConfig = createWidgetConfig(
                 selectedTemplate.id as WidgetType,
@@ -191,7 +210,7 @@ export default function WidgetsClient({ projectId }: WidgetsClientProps) {
                 name: newWidgetName.trim(),
                 type: selectedTemplate.id,
                 config: initialConfig,
-                selectedTestimonialIds: [],
+                selectedTestimonialIds: initialSelectedIds,
                 status: 'published',
                 projectId: projectId || undefined,
             })
@@ -439,6 +458,10 @@ export default function WidgetsClient({ projectId }: WidgetsClientProps) {
                                 onChange={(e) => setNewWidgetName(e.target.value)}
                                 placeholder="My Awesome Widget"
                                 autoFocus
+                                onFocus={(e) => {
+                                    const val = e.target.value;
+                                    e.target.setSelectionRange(val.length, val.length);
+                                }}
                                 className="w-full bg-zinc-900/50 border border-zinc-800 rounded-lg px-4 py-2.5 text-zinc-300 placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]/20 focus:border-[var(--color-accent)]/50 transition-all text-sm"
                                 onKeyDown={(e) => {
                                     if (e.key === 'Enter' && newWidgetName.trim()) {

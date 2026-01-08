@@ -349,12 +349,11 @@ export async function getPublicTestimonialsByIds(ids: string[]): Promise<{ data:
         process.env.SUPABASE_SERVICE_ROLE_KEY!
     );
 
+    // Fetch all testimonials in a single query (no ordering - we'll order by input array)
     const { data, error } = await adminAuthClient
         .from("testimonials")
         .select("*")
-        .in("id", ids)
-        .order("created_at", { ascending: false })
-        .order("id", { ascending: true });
+        .in("id", ids);
 
     if (error) {
         console.error("Error fetching public testimonials:", error);
@@ -403,5 +402,10 @@ export async function getPublicTestimonialsByIds(ids: string[]): Promise<{ data:
         };
     });
 
-    return { data: transformedData };
+    // Reorder to match input array order (preserves user's custom ordering)
+    const orderedData = ids
+        .map(id => transformedData.find(t => t.id === id))
+        .filter((t): t is NonNullable<typeof t> => t !== undefined);
+
+    return { data: orderedData };
 }

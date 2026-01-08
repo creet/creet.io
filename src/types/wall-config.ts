@@ -16,8 +16,8 @@
  */
 export interface WallConfig {
     // Layout & Theme
-    style: 'glassmorphism' | 'brutalist' | 'cinematic' | 'classic'
-    cardTheme: 'glassmorphism' | 'cinematic' | 'brutalist'
+    style: 'glassmorphism' | 'brutalist' | 'cinematic' | 'classic' | 'modern'
+    cardTheme: 'glassmorphism' | 'cinematic' | 'brutalist' | 'modern'
 
     // Colors
     backgroundColor: string
@@ -33,6 +33,9 @@ export interface WallConfig {
 
     // Effects
     shadowIntensity: number
+
+    // Layout
+    columns: 2 | 3 | 4
 
     // Display Options
     showRating: boolean
@@ -74,6 +77,9 @@ export const DEFAULT_WALL_CONFIG: WallConfig = {
 
     // Effects
     shadowIntensity: 50,
+
+    // Layout
+    columns: 3,
 
     // Display Options
     showRating: true,

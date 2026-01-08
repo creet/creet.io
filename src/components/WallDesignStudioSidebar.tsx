@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { X, Upload, Trash2, Globe, MousePointerClick, Paperclip, ChevronDown, ArrowRight, ArrowLeft } from "lucide-react"
+import { X, Upload, Trash2, Globe, MousePointerClick, Paperclip, ChevronDown, ArrowRight, ArrowLeft, ArrowUpDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { ModernFontPicker } from "@/components/ui/modern-font-picker"
@@ -54,7 +54,11 @@ interface WallDesignStudioSidebarProps {
 
     // Testimonial selection
     onSelectTestimonials?: () => void
+    onReorderTestimonials?: () => void
     selectedTestimonialsCount?: number
+
+    // Template
+    onApplyTemplate?: (templateId: string) => void
 }
 
 // ================================================================= //
@@ -71,7 +75,9 @@ export function WallDesignStudioSidebar({
     templates,
     cardThemes,
     onSelectTestimonials,
-    selectedTestimonialsCount
+    onReorderTestimonials,
+    selectedTestimonialsCount,
+    onApplyTemplate
 }: WallDesignStudioSidebarProps) {
 
     // State for collapsible sections
@@ -150,7 +156,7 @@ export function WallDesignStudioSidebar({
             </div>
 
             {/* ===================== TAB CONTENT ===================== */}
-            <div className="flex-1 overflow-y-auto p-4">
+            <div className="flex-1 overflow-y-auto p-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
 
                 {/* =================== TEMPLATES TAB =================== */}
                 {activeTab === 'templates' && (
@@ -159,7 +165,15 @@ export function WallDesignStudioSidebar({
                             {templates.map((template) => (
                                 <button
                                     key={template.id}
-                                    onClick={() => updateConfig('style', template.id as WallConfig['style'])}
+                                    onClick={() => {
+                                        // If an onApplyTemplate prop exists, use it
+                                        if (onApplyTemplate) {
+                                            onApplyTemplate(template.id)
+                                        } else {
+                                            // Fallback for types (though we should update parent)
+                                            updateConfig('style', template.id as any)
+                                        }
+                                    }}
                                     className={cn(
                                         "rounded-xl overflow-hidden transition-all border-2",
                                         config.style === template.id
@@ -276,6 +290,7 @@ export function WallDesignStudioSidebar({
                                 </div>
                             </div>
 
+
                             {/* Typography */}
                             <div className="space-y-2">
                                 <Label className="text-xs text-zinc-400">Typography</Label>
@@ -300,55 +315,93 @@ export function WallDesignStudioSidebar({
                                 />
                             </div>
 
-                            {/* Accent Color (Swatches) */}
+                            {/* Header Gradient Picker */}
                             <div className="space-y-3">
-                                <Label className="text-xs text-zinc-400">Rating Color</Label>
-                                <div className="flex flex-wrap gap-2">
+                                <div className="flex items-center justify-between">
+                                    <Label className="text-xs text-zinc-400">Header Background</Label>
+                                    <span className="text-[10px] text-zinc-500">{headerBgPage + 1}/2</span>
+                                </div>
+                                <div className="flex gap-2">
                                     {[
-                                        '#8b5cf6', // Purple
-                                        '#ec4899', // Pink
-                                        '#10b981', // Green
-                                        '#f59e0b', // Orange
-                                        '#ef4444', // Red
-                                        '#3b82f6', // Blue
-                                    ].map((color) => (
+                                        'linear-gradient(to right, #3b82f6, #2563eb)', // Blue (Default)
+                                        'linear-gradient(to right, #8b5cf6, #6366f1)', // Purple/Indigo
+                                        'linear-gradient(to right, #ec4899, #d946ef)', // Pink/Fuchsia
+                                        'linear-gradient(to right, #f97316, #ea580c)', // Orange
+                                        'linear-gradient(to right, #10b981, #059669)', // Emerald
+                                        'linear-gradient(to right, #06b6d4, #0891b2)', // Cyan
+                                        'linear-gradient(to right, #1e293b, #0f172a)', // Slate
+                                        'linear-gradient(to right, #be123c, #9f1239)', // Rose
+                                        'linear-gradient(to right, #4338ca, #3730a3)', // Indigo
+                                        'linear-gradient(to right, #18181b, #27272a)', // Zinc
+                                    ].slice(headerBgPage * 5, (headerBgPage + 1) * 5).map((gradient) => (
                                         <button
-                                            key={color}
-                                            onClick={() => updateConfig('accentColor', color)}
+                                            key={gradient}
+                                            onClick={() => updateConfig('headerBackground', gradient)}
                                             className={cn(
-                                                "w-9 h-9 rounded-lg transition-all border-2",
-                                                config.accentColor === color
+                                                "w-9 h-9 shrink-0 rounded-lg transition-all border-2",
+                                                config.headerBackground === gradient
                                                     ? "border-white scale-110 shadow-md"
                                                     : "border-transparent hover:scale-105"
                                             )}
-                                            style={{ backgroundColor: color }}
-                                            aria-label={`Select rating color ${color}`}
+                                            style={{ background: gradient }}
+                                            aria-label="Select header gradient"
                                         />
+                                    ))}
+
+                                    <button
+                                        onClick={() => setHeaderBgPage(prev => prev === 0 ? 1 : 0)}
+                                        className="w-9 h-9 shrink-0 rounded-lg bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 hover:border-zinc-600 flex items-center justify-center text-zinc-400 hover:text-white transition-all"
+                                        title={headerBgPage === 0 ? "Next colors" : "Previous colors"}
+                                    >
+                                        {headerBgPage === 0 ? <ArrowRight className="w-4 h-4" /> : <ArrowLeft className="w-4 h-4" />}
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Column Layout */}
+                            <div className="space-y-3">
+                                <Label className="text-xs text-zinc-400">Column Layout</Label>
+                                <div className="grid grid-cols-3 gap-2">
+                                    {([2, 3, 4] as const).map((cols) => (
+                                        <button
+                                            key={cols}
+                                            onClick={() => updateConfig('columns', cols)}
+                                            className={cn(
+                                                "py-2.5 px-2 rounded-lg border transition-all text-center text-xs font-medium",
+                                                config.columns === cols
+                                                    ? "bg-zinc-800 border-zinc-600 text-white shadow-sm"
+                                                    : "bg-zinc-800/30 border-transparent text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200"
+                                            )}
+                                        >
+                                            {cols} Columns
+                                        </button>
                                     ))}
                                 </div>
                             </div>
 
 
-                            {/* Title Color */}
+
+
+                            {/* Rating Color (Picker) */}
                             <div className="space-y-2">
-                                <Label className="text-xs text-zinc-400">Title Color</Label>
+                                <Label className="text-xs text-zinc-400">Rating Color</Label>
                                 <div className="flex gap-3">
                                     <div className="relative w-10 h-10 shrink-0">
                                         <input
                                             type="color"
-                                            value={config.textColor}
-                                            onChange={(e) => updateConfig('textColor', e.target.value)}
+                                            value={config.accentColor}
+                                            onChange={(e) => updateConfig('accentColor', e.target.value)}
                                             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                                         />
                                         <div
                                             className="w-full h-full rounded border border-zinc-700 shadow-sm"
-                                            style={{ backgroundColor: config.textColor }}
+                                            style={{ backgroundColor: config.accentColor }}
                                         />
                                     </div>
                                     <input
                                         type="text"
-                                        value={config.textColor}
-                                        onChange={(e) => updateConfig('textColor', e.target.value)}
+                                        value={config.accentColor}
+                                        onChange={(e) => updateConfig('accentColor', e.target.value)}
                                         className="flex-1 px-3 py-2 bg-zinc-800/50 border border-zinc-700 rounded-md text-zinc-300 text-xs font-mono focus:outline-none focus:border-violet-500 transition-colors"
                                     />
                                 </div>
@@ -515,48 +568,7 @@ export function WallDesignStudioSidebar({
 
                             {openSections.advanced && (
                                 <div className="space-y-4 animate-in slide-in-from-top-2 fade-in duration-200">
-                                    {/* Header Gradient Picker */}
-                                    <div className="space-y-3">
-                                        <div className="flex items-center justify-between">
-                                            <Label className="text-xs text-zinc-400">Header Background</Label>
-                                            <span className="text-[10px] text-zinc-500">{headerBgPage + 1}/2</span>
-                                        </div>
-                                        <div className="flex gap-2">
-                                            {[
-                                                'linear-gradient(to right, #3b82f6, #2563eb)', // Blue (Default)
-                                                'linear-gradient(to right, #8b5cf6, #6366f1)', // Purple/Indigo
-                                                'linear-gradient(to right, #ec4899, #d946ef)', // Pink/Fuchsia
-                                                'linear-gradient(to right, #f97316, #ea580c)', // Orange
-                                                'linear-gradient(to right, #10b981, #059669)', // Emerald
-                                                'linear-gradient(to right, #06b6d4, #0891b2)', // Cyan
-                                                'linear-gradient(to right, #1e293b, #0f172a)', // Slate
-                                                'linear-gradient(to right, #be123c, #9f1239)', // Rose
-                                                'linear-gradient(to right, #4338ca, #3730a3)', // Indigo
-                                                'linear-gradient(to right, #18181b, #27272a)', // Zinc
-                                            ].slice(headerBgPage * 5, (headerBgPage + 1) * 5).map((gradient) => (
-                                                <button
-                                                    key={gradient}
-                                                    onClick={() => updateConfig('headerBackground', gradient)}
-                                                    className={cn(
-                                                        "w-9 h-9 shrink-0 rounded-lg transition-all border-2",
-                                                        config.headerBackground === gradient
-                                                            ? "border-white scale-110 shadow-md"
-                                                            : "border-transparent hover:scale-105"
-                                                    )}
-                                                    style={{ background: gradient }}
-                                                    aria-label="Select header gradient"
-                                                />
-                                            ))}
 
-                                            <button
-                                                onClick={() => setHeaderBgPage(prev => prev === 0 ? 1 : 0)}
-                                                className="w-9 h-9 shrink-0 rounded-lg bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 hover:border-zinc-600 flex items-center justify-center text-zinc-400 hover:text-white transition-all"
-                                                title={headerBgPage === 0 ? "Next colors" : "Previous colors"}
-                                            >
-                                                {headerBgPage === 0 ? <ArrowRight className="w-4 h-4" /> : <ArrowLeft className="w-4 h-4" />}
-                                            </button>
-                                        </div>
-                                    </div>
 
                                     {/* Divider */}
                                     <div className="h-px bg-zinc-800" />
@@ -586,13 +598,23 @@ export function WallDesignStudioSidebar({
             </div>
 
             {/* ===================== FOOTER ===================== */}
-            <div className="p-4 border-t border-zinc-800">
+            <div className="p-4 border-t border-zinc-800 space-y-2">
                 <Button
                     onClick={onSelectTestimonials}
                     className="w-full bg-violet-600 hover:bg-violet-500 text-white font-medium"
                 >
                     Select Testimonials {selectedTestimonialsCount !== undefined && `(${selectedTestimonialsCount})`}
                 </Button>
+                {selectedTestimonialsCount !== undefined && selectedTestimonialsCount > 1 && (
+                    <Button
+                        onClick={onReorderTestimonials}
+                        variant="outline"
+                        className="w-full border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-white"
+                    >
+                        <ArrowUpDown className="w-4 h-4 mr-2" />
+                        Reorder Testimonials
+                    </Button>
+                )}
             </div>
         </div>
     )

@@ -17,11 +17,15 @@ import {
     Twitter,
     Linkedin,
     Facebook,
-    Loader2
+    Loader2,
+    MessageSquare,
+    Mail,
+    Video
 } from "lucide-react"
 import { VideoPlayer } from "@/components/ui/VideoPlayer"
 import { cn } from "@/lib/utils"
 // import Logo from "@/components/ui/Logo" // Assuming Logo is available or we use <img>
+import { BrandIcon } from "@/lib/brands/BrandIcon";
 
 // ... (existing imports)
 
@@ -56,20 +60,7 @@ const DEMO_TESTIMONIALS = [
 
 // ===================== HELPER COMPONENTS (Duplicated from WallOfLovePage for standalone rendering) ===================== //
 
-const getSourceIcon = (source: string) => {
-    switch (source) {
-        case 'TWITTER':
-            return { icon: Twitter, color: 'text-sky-500', bg: 'bg-sky-500/10' }
-        case 'LINKEDIN':
-            return { icon: Linkedin, color: 'text-blue-600', bg: 'bg-blue-600/10' }
-        case 'FACEBOOK':
-            return { icon: Facebook, color: 'text-blue-500', bg: 'bg-blue-500/10' }
-        case 'PLAYSTORE':
-            return { icon: null, color: 'text-green-600', bg: 'bg-green-600/10', text: '▶' }
-        default:
-            return { icon: null, color: 'text-zinc-500', bg: 'bg-zinc-500/10', text: '●' }
-    }
-}
+
 
 const ExpandableContent = ({
     content,
@@ -164,6 +155,7 @@ export default function PublicWidgetClient({ widget, testimonials: initialTestim
     }, [initialTestimonials])
 
     const [activeCardIndex, setActiveCardIndex] = React.useState(0)
+
     const activeTestimonial = testimonials[activeCardIndex % testimonials.length]
 
     const handleNextCard = () => {
@@ -287,22 +279,34 @@ export default function PublicWidgetClient({ widget, testimonials: initialTestim
                                         {/* Source Icon */}
                                         <div className="absolute top-4 right-4">
                                             {(() => {
-                                                const sourceInfo = getSourceIcon(t.source)
-                                                const IconComponent = sourceInfo.icon
+                                                const s = t.source.toLowerCase();
+                                                const isManual = s.includes("manual");
+                                                const isVideo = s.includes("video");
+                                                const isEmail = s.includes("email");
+
+                                                if (isManual || isVideo || isEmail) {
+                                                    return (
+                                                        <div className={cn(
+                                                            "size-6 rounded-lg border flex items-center justify-center transition-all duration-200 cursor-default",
+                                                            isManual ? "bg-zinc-800/50 border-zinc-700/50 text-zinc-400" :
+                                                                isVideo ? "bg-purple-500/10 border-purple-500/20 text-purple-400" :
+                                                                    "bg-indigo-500/10 border-indigo-500/20 text-indigo-400"
+                                                        )}>
+                                                            {isManual && <MessageSquare className="w-[75%] h-[75%]" />}
+                                                            {isVideo && <Video className="w-[75%] h-[75%]" />}
+                                                            {isEmail && <Mail className="w-[75%] h-[75%]" />}
+                                                        </div>
+                                                    );
+                                                }
+
                                                 return (
-                                                    <div className={cn(
-                                                        "w-6 h-6 rounded-full flex items-center justify-center",
-                                                        sourceInfo.bg
-                                                    )}>
-                                                        {IconComponent ? (
-                                                            <IconComponent className={cn("w-3.5 h-3.5", sourceInfo.color)} />
-                                                        ) : (
-                                                            <span className={cn("text-xs font-bold", sourceInfo.color)}>
-                                                                {sourceInfo.text}
-                                                            </span>
-                                                        )}
-                                                    </div>
-                                                )
+                                                    <BrandIcon
+                                                        brandId={t.source}
+                                                        size={24}
+                                                        showBackground
+                                                        variant="rounded"
+                                                    />
+                                                );
                                             })()}
                                         </div>
 
@@ -389,7 +393,6 @@ export default function PublicWidgetClient({ widget, testimonials: initialTestim
                         isDarkMode={isDarkMode}
                     />
                 )}
-// ... (rest of the file)
 
                 {config.type === "minimal-card" && isCardWidget(config) && (
                     <MinimalCard
